@@ -88,6 +88,17 @@ setting up parameters for test-----------------------------
     t1=dtime();
     printf("cpu time(s): %lf\n", t1-t0);
 
+
+
+    if(verbosity) printf("Released context\n");
+//	free(kernel_files);
+//	free(wg_sizes);
+	free(tv);
+	free(x_host);
+	free(y_host);
+	if(do_affirm) free(host_out);
+	free_csr(csr,num_matrices);
+	return 0;
 }
 
 double dtime()
