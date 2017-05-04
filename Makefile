@@ -16,7 +16,7 @@ main_acc: main.c cpu_3d_jacobi.c acc_3d_jacobi.c
 main_omp: main.c cpu_3d_jacobi.c acc_3d_jacobi.c
 	$(CC) $(CCFLAGS) $(OMPFLAGS) -o $@ $^
 
-main_cpu: csr_main1.c csr_cpu.c sparse_formats.c common_args.c
+main_cpu: csr_main1.c csr_cpu.c sparse_formats.c
 	$(CC) $(CCFLAGS) $(OMPFLAGS) -o $@ $^
 
 clean:
