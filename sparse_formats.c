@@ -1,4 +1,4 @@
-#include "../inc/sparse_formats.h"
+#include "sparse_formats.h"
 
 triplet* triplet_new_array(const size_t N) {
 	//dispatch on location
