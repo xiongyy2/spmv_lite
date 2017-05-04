@@ -153,7 +153,7 @@ setting up parameters for test-----------------------------
     if(verbosity) printf("Released context\n");
 //	free(kernel_files);
 //	free(wg_sizes);
-	free(tv);
+//	free(tv);
 	free(x_host);
 	free(y_host);
 	if(do_affirm) free(host_out);
