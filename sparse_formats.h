@@ -24,7 +24,7 @@
 #include<time.h>
 #include<string.h>
 
-#include "common_args.h"
+//#include "common_args.h"
 #include "ziggurat.h"
 
 /*
