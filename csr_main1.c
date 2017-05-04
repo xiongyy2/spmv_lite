@@ -15,7 +15,7 @@ void spmv_csr_cpu(const csr_matrix* csr,const float* x,const float* y,float* out
 void* float_array_realloc(void* ptr,const size_t N,const char* error_msg)
 {
 	int err;
-	if (_deviceType == 3){
+	/*if (_deviceType == 3){
 		if(ptr != NULL) free(ptr);
 		err = posix_memalign(&ptr,ACL_ALIGNMENT,N * sizeof(float));
 		check(!err,error_msg);
@@ -23,7 +23,9 @@ void* float_array_realloc(void* ptr,const size_t N,const char* error_msg)
 	else{
 		ptr = realloc(ptr,N * sizeof(float));
 		check(ptr != NULL,error_msg);
-	}
+	}*/
+	ptr = realloc(ptr,N * sizeof(float));
+	check(ptr != NULL,error_msg);
 	return ptr;
 }
 
