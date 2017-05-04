@@ -1,5 +1,5 @@
 #include "sparse_formats.h"
-#include "math.h"
+#include <math.h>
 
 #define MINIMUM(i,j) ((i)<(j) ? (i) : (j))
 
