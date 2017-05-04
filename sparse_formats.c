@@ -1,4 +1,7 @@
 #include "sparse_formats.h"
+#include "math.h"
+
+#define MINIMUM(i,j) ((i)<(j) ? (i) : (j))
 
 triplet* triplet_new_array(const size_t N) {
 	//dispatch on location
