@@ -17,7 +17,7 @@ extern "C" {
 
 #define CL_USE_DEPRECATED_OPENCL_2_0_APIS
 
-#include <CL/cl.h>
+#include "/opt/AMDAPPSDK-3.0-0-Beta/lib/x86_64/CL/cl.h"
 #endif
 #ifdef OPENCL_HEADER_LONG
 #include <OpenCL/opencl.h>
