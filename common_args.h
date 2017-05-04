@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 
-#include <opts/opts.h>
+#include "./opts/opts.h"
 #ifdef OPENCL_HEADER_CL_CL
 #include <CL/cl.h>
 #endif
