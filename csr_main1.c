@@ -9,6 +9,40 @@
 double dtime();
 
 
+void* int_new_array(const size_t N,const char* error_msg)
+{
+	void* ptr;
+	int err;
+	/*if (_deviceType == 3){
+		err = posix_memalign(&ptr,ACL_ALIGNMENT,N * sizeof(int));
+		check(err == 0,error_msg);
+	}
+	else{
+		ptr = malloc(N * sizeof(int));
+		check(ptr != NULL,error_msg);
+	}*/
+	ptr = malloc(N * sizeof(int));
+	check(ptr != NULL,error_msg);
+	return ptr;
+}
+
+void* float_new_array(const size_t N,const char* error_msg)
+{
+	void* ptr;
+	int err;
+	/*if (_deviceType == 3){
+		err = posix_memalign(&ptr,ACL_ALIGNMENT,N * sizeof(float));
+		check(!err,error_msg);
+	}
+	else{
+		ptr = malloc(N * sizeof(float));
+		check(ptr != NULL,error_msg);
+	}*/
+	ptr = malloc(N * sizeof(float));
+	check(ptr != NULL,error_msg);
+	return ptr;
+}
+
 void spmv_csr_cpu(const csr_matrix* csr,const float* x,const float* y,float* out);
 //void spmv_csr_acc(const csr_matrix* csr,const float* x,const float* y,float* out);
 
