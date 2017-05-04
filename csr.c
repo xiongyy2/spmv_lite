@@ -12,11 +12,11 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "../../../include/rdtsc.h"
-#include "../../../include/common_args.h"
+#include "rdtsc.h"
+#include "common_args.h"
 //#include "../../../include/common_util.h"
-#include "../inc/common.h"
-#include "../inc/sparse_formats.h"
+#include "common.h"
+#include "sparse_formats.h"
 #ifdef __FPGA__
     #include "cl_ext.h"
 #endif
