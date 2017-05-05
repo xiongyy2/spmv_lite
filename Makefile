@@ -6,7 +6,7 @@ ACCFLAGS = -acc -ta=radeon -Minfo=accel
 OMPFLAGS = -fast -mp -Minfo
 RM       = rm
 
-BIN =  main_omp main_acc
+BIN =  main_omp main_acc main_cpu_gcc main_cpu_pgcc
 
 all: $(BIN)
 
