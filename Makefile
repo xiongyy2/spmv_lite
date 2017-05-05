@@ -16,8 +16,11 @@ main_acc: main.c cpu_3d_jacobi.c acc_3d_jacobi.c
 main_omp: main.c cpu_3d_jacobi.c acc_3d_jacobi.c
 	$(CC) $(CCFLAGS) $(OMPFLAGS) -o $@ $^
 
-main_cpu: csr_main1.c csr_cpu.c sparse_formats.c ziggurat.c
+main_cpu_gcc: csr_main1.c csr_cpu.c sparse_formats.c ziggurat.c
 	gcc -lm -o $@ $^
+
+main_cpu_pgcc: csr_main1.c csr_cpu.c sparse_formats.c ziggurat.c
+	$(CC) -o $@ $^
 
 clean:
 	$(RM) $(BIN) *.o
