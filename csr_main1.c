@@ -8,6 +8,14 @@
 
 double dtime();
 
+void check(int b,const char* msg)
+{
+	if(!b)
+	{
+		fprintf(stderr,"error: %s\n\n",msg);
+		exit(-1);
+	}
+}
 
 void* int_new_array(const size_t N,const char* error_msg)
 {
@@ -61,15 +69,6 @@ void* float_array_realloc(void* ptr,const size_t N,const char* error_msg)
 	ptr = realloc(ptr,N * sizeof(float));
 	check(ptr != NULL,error_msg);
 	return ptr;
-}
-
-void check(int b,const char* msg)
-{
-	if(!b)
-	{
-		fprintf(stderr,"error: %s\n\n",msg);
-		exit(-1);
-	}
 }
 
 void float_array_comp(const float* control, const float* experimental, const unsigned int N, const unsigned int exec_num)
