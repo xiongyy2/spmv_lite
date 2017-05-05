@@ -10,10 +10,10 @@ BIN =  main_omp main_acc main_cpu_gcc main_cpu_pgcc
 
 all: $(BIN)
 
-main_acc: main.c cpu_3d_jacobi.c acc_3d_jacobi.c
+main_acc: csr_main1.c csr_cpu.c csr_ompacc.c sparse_formats.c ziggurat.c
 	$(CC) $(CCFLAGS) $(ACCFLAGS) -o $@ $^
 
-main_omp: main.c cpu_3d_jacobi.c acc_3d_jacobi.c
+main_omp: csr_main1.c csr_cpu.c csr_ompacc.c sparse_formats.c ziggurat.c
 	$(CC) $(CCFLAGS) $(OMPFLAGS) -o $@ $^
 
 main_cpu_gcc: csr_main1.c csr_cpu.c sparse_formats.c ziggurat.c

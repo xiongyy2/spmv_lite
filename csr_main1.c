@@ -144,13 +144,14 @@ setting up parameters for test-----------------------------
 	if(verbosity) printf("Input Generated.\n");
 //other arrays end
 
-
-    double t0, t1;
-    t0=dtime();
-    spmv_csr_cpu(&csr[0],x_host,y_host,host_out);
-    t1=dtime();
-    printf("cpu time(s): %lf\n", t1-t0);
-
+	double t0, t1;
+	if(do_affirm)
+	{
+		t0=dtime();
+		spmv_csr_cpu(&csr[0],x_host,y_host,host_out);
+		t1=dtime();
+		printf("cpu time(s): %lf\n", t1-t0);
+	}
 	t0=dtime();
 	spmv_csr_acc(&csr[0],x_host,y_host,para_out);
 	t1=dtime();
