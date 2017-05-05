@@ -132,15 +132,15 @@ setting up parameters for test-----------------------------
         max_col_len = csr[ii].num_cols;
         x_host = float_array_realloc(x_host,csr[ii].num_cols,"csr.main() - Heap Overflow! Cannot Allocate Space for x_host");
     }
-    for(ii = 0; ii < max_col_len; ii++)
+    for(int i1 = 0; i1 < max_col_len; i1++)
 	{
-		x_host[ii] = rand() / (RAND_MAX + 1.0);
-		if(do_print) printf("x[%d] = %6.2f\n",ii,x_host[ii]);
+		x_host[i1] = rand() / (RAND_MAX + 1.0);
+		if(do_print) printf("x[%d] = %6.2f\n",i1,x_host[i1]);
 	}
-	for(ii = 0; ii < max_row_len; ii++)
+	for(int i2 = 0; i2 < max_row_len; i2++)
 	{
-		y_host[ii] = rand() / (RAND_MAX + 2.0);
-		if(do_print) printf("y[%d] = %6.2f\n",ii,y_host[ii]);
+		y_host[i2] = rand() / (RAND_MAX + 2.0);
+		if(do_print) printf("y[%d] = %6.2f\n",i2,y_host[i2]);
 	}
 
 	if(verbosity) printf("Input Generated.\n");
