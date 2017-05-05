@@ -112,8 +112,8 @@ setting up parameters for test-----------------------------
 	float *para_out=NULL;//store parallel result
 	unsigned int max_row_len=0,max_col_len=0;
 
-	para_out = realloc(host_out,sizeof(float)*max_row_len);
-	check(host_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
+	para_out = realloc(para_out,sizeof(float)*max_row_len);
+	check(para_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
 
     if(max_row_len < csr[ii].num_rows)
     {
