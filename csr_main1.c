@@ -86,7 +86,7 @@ void float_array_comp(const float* control, const float* experimental, const uns
 	}
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     int num_wg,verbosity = 0,do_print=0,do_affirm=0,do_mem_align=0,opt, option_index=0;
 	unsigned long density_ppm = 500000;
