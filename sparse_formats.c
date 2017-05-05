@@ -69,7 +69,7 @@ void write_csr(const csr_matrix* csr,const unsigned int num_csr,const char* file
 csr_matrix* read_csr(unsigned int* num_csr,const char* file_path)
 {
 	FILE* fp;
-	long i,j,read_count;
+	int i,j,read_count;
 	csr_matrix* csr;
 
 	check(num_csr != NULL,"sparse_formats.read_csr() - ptr to num_csr is NULL!");
