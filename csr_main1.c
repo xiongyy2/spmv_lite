@@ -52,7 +52,7 @@ void* float_new_array(const size_t N,const char* error_msg)
 }
 
 void spmv_csr_cpu(const csr_matrix* csr,const float* x,const float* y,float* out);
-//void spmv_csr_acc(const csr_matrix* csr,const float* x,const float* y,float* out);
+void spmv_csr_acc(const csr_matrix* csr,const float* x,const float* y,float* out);
 
 void* float_array_realloc(void* ptr,const size_t N,const char* error_msg)
 {
@@ -102,14 +102,18 @@ setting up parameters for test-----------------------------
     verbosity=1;
     do_affirm=1;
     num_matrices=1;
-    file_path="csrmatrix_R1_N512_D5000_S01_17-5-2-22-7";
+    file_path="csrmatrix_R1_N10000_D5000_S01_17-5-5-15-51";
 //---------------------------------------------------------
 
     csr_matrix* csr = read_csr(&num_matrices,file_path);
 
 //The other arrays
 	float *x_host = NULL, *y_host = NULL, /* *device_out[num_matrices],*/ *host_out=NULL;
+	float *para_out=NULL;//store parallel result
 	unsigned int max_row_len=0,max_col_len=0;
+
+	para_out = realloc(host_out,sizeof(float)*max_row_len);
+	check(host_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
 
     if(max_row_len < csr[ii].num_rows)
     {
@@ -147,6 +151,18 @@ setting up parameters for test-----------------------------
     t1=dtime();
     printf("cpu time(s): %lf\n", t1-t0);
 
+	t0=dtime();
+	spmv_csr_acc(&csr[0],x_host,y_host,para_out);
+	t1=dtime();
+	printf("acc/omp time(s): %lf\n", t1-t0);
+
+	if(do_affirm)
+	{
+		int k=0;//because num_matrices=1
+		int i=0;//num_exec
+		float_array_comp(host_out,para_out,csr[k].num_rows,i+1);
+	}
+
 
 
     if(verbosity) printf("Released context\n");
@@ -156,6 +172,7 @@ setting up parameters for test-----------------------------
 	free(x_host);
 	free(y_host);
 	if(do_affirm) free(host_out);
+	free(para_out);
 	free_csr(csr,num_matrices);
 	return 0;
 }
