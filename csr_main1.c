@@ -99,6 +99,9 @@ int main(int argc, char *argv[])
 /*
 setting up parameters for test-----------------------------
 */
+	k=0;
+	i=0;
+	ii=0;
     verbosity=1;
     do_affirm=1;
     num_matrices=1;
@@ -112,13 +115,12 @@ setting up parameters for test-----------------------------
 	float *para_out=NULL;//store parallel result
 	unsigned int max_row_len=0,max_col_len=0;
 
-	para_out = realloc(para_out,sizeof(float)*max_row_len);
-	check(para_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
-
     if(max_row_len < csr[ii].num_rows)
     {
         max_row_len = csr[ii].num_rows;
         y_host = float_array_realloc(y_host,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for y_host");
+		para_out = realloc(para_out,sizeof(float)*max_row_len);
+		check(para_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
         if(do_affirm)
         {
             host_out = realloc(host_out,sizeof(float)*max_row_len);
@@ -159,8 +161,6 @@ setting up parameters for test-----------------------------
 
 	if(do_affirm)
 	{
-		int k=0;//because num_matrices=1
-		int i=0;//num_exec
 		float_array_comp(host_out,para_out,csr[k].num_rows,i+1);
 	}
 
