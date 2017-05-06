@@ -35,11 +35,11 @@ typedef struct csr_matrix
 {//if ith row is empty Ap[i] = Ap[i+1]
     unsigned int index_type;
     float value_type;
-    unsigned int num_rows, num_cols, num_nonzeros,density_ppm;
+    unsigned long num_rows, num_cols, num_nonzeros,density_ppm;
     double density_perc,nz_per_row,stddev;
 
-    unsigned int * Ap;  //row pointer
-    unsigned int * Aj;  //column indices
+    unsigned long * Ap;  //row pointer
+    unsigned long * Aj;  //column indices
     float * Ax;  //nonzeros
 }
 csr_matrix;

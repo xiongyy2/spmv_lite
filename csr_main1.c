@@ -34,6 +34,23 @@ void* int_new_array(const size_t N,const char* error_msg)
 	return ptr;
 }
 
+void* long_new_array(const size_t N,const char* error_msg)
+{
+	void* ptr;
+	int err;
+	/*if (_deviceType == 3){
+		err = posix_memalign(&ptr,ACL_ALIGNMENT,N * sizeof(int));
+		check(err == 0,error_msg);
+	}
+	else{
+		ptr = malloc(N * sizeof(int));
+		check(ptr != NULL,error_msg);
+	}*/
+	ptr = malloc(N * sizeof(long));
+	check(ptr != NULL,error_msg);
+	return ptr;
+}
+
 void* float_new_array(const size_t N,const char* error_msg)
 {
 	void* ptr;
@@ -105,7 +122,7 @@ setting up parameters for test-----------------------------
     verbosity=1;
     do_affirm=1;
     num_matrices=1;
-    file_path="csrmatrix_R1_N512_D5000_S01_17-5-2-22-7";
+    file_path="csrmatrix_R1_N10000_D5000_S01_17-5-5-15-51";
 //---------------------------------------------------------
 
     csr_matrix* csr = read_csr(&num_matrices,file_path);

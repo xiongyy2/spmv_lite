@@ -69,7 +69,7 @@ void write_csr(const csr_matrix* csr,const unsigned int num_csr,const char* file
 csr_matrix* read_csr(unsigned int* num_csr,const char* file_path)
 {
 	FILE* fp;
-	int i,j,read_count;
+	long i,j,read_count;
 	csr_matrix* csr;
 
 	check(num_csr != NULL,"sparse_formats.read_csr() - ptr to num_csr is NULL!");
@@ -83,19 +83,19 @@ csr_matrix* read_csr(unsigned int* num_csr,const char* file_path)
 
 	for(j=0; j<*num_csr; j++)
 	{
-		read_count = fscanf(fp,"%u\n%u\n%u\n%u\n%lf\n%lf\n%lf\n",&(csr[j].num_rows),&(csr[j].num_cols),&(csr[j].num_nonzeros),&(csr[j].density_ppm),&(csr[j].density_perc),&(csr[j].nz_per_row),&(csr[j].stddev));
+		read_count = fscanf(fp,"%lu\n%lu\n%lu\n%lu\n%lf\n%lf\n%lf\n",&(csr[j].num_rows),&(csr[j].num_cols),&(csr[j].num_nonzeros),&(csr[j].density_ppm),&(csr[j].density_perc),&(csr[j].nz_per_row),&(csr[j].stddev));
 		check(read_count == 7,"sparse_formats.read_csr() - Input File Corrupted! Read count for header info differs from 7");
 
 		read_count = 0;
-		csr[j].Ap = int_new_array(csr[j].num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
+		csr[j].Ap = long_new_array(csr[j].num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
 		for(i=0; i<=csr[j].num_rows; i++)
-			read_count += fscanf(fp,"%u ",csr[j].Ap+i);
+			read_count += fscanf(fp,"%lu ",csr[j].Ap+i);
 		check(read_count == (csr[j].num_rows+1),"sparse_formats.read_csr() - Input File Corrupted! Read count for Ap differs from csr[j].num_rows+1");
 
 		read_count = 0;
-		csr[j].Aj = int_new_array(csr[j].num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Aj");
+		csr[j].Aj = long_new_array(csr[j].num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Aj");
 		for(i=0; i<csr[j].num_nonzeros; i++)
-			read_count += fscanf(fp,"%u ",csr[j].Aj+i);
+			read_count += fscanf(fp,"%lu ",csr[j].Aj+i);
 		check(read_count == (csr[j].num_nonzeros),"sparse_formats.read_csr() - Input File Corrupted! Read count for Aj differs from csr[j].num_nonzeros");
 
 		read_count = 0;
