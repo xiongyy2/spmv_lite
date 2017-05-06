@@ -192,7 +192,7 @@ setting up parameters for test-----------------------------
 	if(verbosity) printf("freed x_host\n");
 	free(y_host);
 	if(verbosity) printf("freed y_host\n");
-	//if(do_affirm) free(host_out);
+	if(do_affirm) free(host_out);
 	if(verbosity) printf("freed host_out\n");
 	free(para_out);
 	if(verbosity) printf("freed para_out\n");
