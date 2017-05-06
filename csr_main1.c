@@ -178,7 +178,7 @@ setting up parameters for test-----------------------------
 
 	if(do_affirm)
 	{
-		float_array_comp(host_out,para_out,csr[k].num_rows,i+1);
+		float_array_comp(&host_out,&para_out,csr[k].num_rows,i+1);
 	}
 
 
