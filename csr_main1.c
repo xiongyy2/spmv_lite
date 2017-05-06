@@ -170,12 +170,12 @@ setting up parameters for test-----------------------------
 	if(do_affirm)
 	{
 		t0=dtime();
-		spmv_csr_cpu(csr[0],x_host,y_host,host_out);
+		spmv_csr_cpu(&csr[0],x_host,y_host,host_out);
 		t1=dtime();
 		printf("cpu time(s): %lf\n", t1-t0);
 	}
 	t0=dtime();
-	spmv_csr_acc(csr[0],x_host,y_host,para_out);
+	spmv_csr_acc(&csr[0],x_host,y_host,para_out);
 	t1=dtime();
 	printf("acc/omp time(s): %lf\n", t1-t0);
 
