@@ -88,9 +88,9 @@ void* float_array_realloc(void* ptr,const size_t N,const char* error_msg)
 	return ptr;
 }
 
-void float_array_comp(const float* control, const float* experimental, const unsigned int N, const unsigned int exec_num)
+void float_array_comp(const float* control, const float* experimental, const unsigned long N, const unsigned int exec_num)
 {
-	unsigned int j;
+	unsigned long j;
 	float diff,perc;
 	for (j = 0; j < N; j++)
 	{
@@ -167,12 +167,12 @@ setting up parameters for test-----------------------------
 	if(do_affirm)
 	{
 		t0=dtime();
-		spmv_csr_cpu(&csr[0],x_host,y_host,host_out);
+		spmv_csr_cpu(&csr[0],x_host,y_host,&host_out);
 		t1=dtime();
 		printf("cpu time(s): %lf\n", t1-t0);
 	}
 	t0=dtime();
-	spmv_csr_acc(&csr[0],x_host,y_host,para_out);
+	spmv_csr_acc(&csr[0],x_host,y_host,&para_out);
 	t1=dtime();
 	printf("acc/omp time(s): %lf\n", t1-t0);
 
