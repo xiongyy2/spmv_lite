@@ -131,7 +131,7 @@ setting up parameters for test-----------------------------
 //The other arrays
 	float *x_host = NULL, *y_host = NULL, /* *device_out[num_matrices],*/ *host_out=NULL;
 	float *para_out=NULL;//store parallel result
-	unsigned int max_row_len=0,max_col_len=0;
+	unsigned long max_row_len=0,max_col_len=0;
 
     if(max_row_len < csr[ii].num_rows)
     {
