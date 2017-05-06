@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	unsigned long density_ppm = 500000;
 	unsigned int N = 512,num_execs=1,num_matrices,i,ii,iii,j,k,num_wg_sizes=0,num_kernels=0;
 	unsigned long start_time, end_time;
-	struct timeval *tv;
+	//struct timeval *tv;
 	char* file_path = NULL,*optptr;
 	void* tmp;
 
@@ -189,10 +189,15 @@ setting up parameters for test-----------------------------
 //	free(wg_sizes);
 //	free(tv);
 	free(x_host);
+	if(verbosity) printf("freed x_host\n");
 	free(y_host);
+	if(verbosity) printf("freed y_host\n");
 	if(do_affirm) free(host_out);
+	if(verbosity) printf("freed host_out\n");
 	free(para_out);
+	if(verbosity) printf("freed para_out\n");
 	free_csr(csr,num_matrices);
+	if(verbosity) printf("freed csr\n");
 	return 0;
 }
 
