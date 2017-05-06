@@ -139,12 +139,12 @@ setting up parameters for test-----------------------------
         y_host = float_array_realloc(y_host,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for y_host");
 		//para_out = realloc(para_out,sizeof(float)*max_row_len);
 		//check(para_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
-		para_out=float_array_realloc(para_out,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'")
+		para_out=float_array_realloc(para_out,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
         if(do_affirm)
         {
             //host_out = realloc(host_out,sizeof(float)*max_row_len);
             //check(host_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'host_out'");
-			host_out=float_array_realloc(host_out,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for 'host_out'")
+			host_out=float_array_realloc(host_out,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for 'host_out'");
         }
     }
     if(max_col_len < csr[ii].num_cols)
