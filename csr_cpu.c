@@ -2,7 +2,7 @@
 
 void spmv_csr_cpu(const csr_matrix* csr,const float* x,const float* y,float* out)
 {
-    unsigned int row,row_start,row_end,jj;
+    unsigned long row,row_start,row_end,jj;
 	float sum = 0;
 	for(row=0; row < csr->num_rows; row++)
 	{
