@@ -98,7 +98,7 @@ void float_array_comp(const float* control, const float* experimental, const uns
 		if(fabsf(diff) > .001)
 		{
 			perc = fabsf(diff/control[j]) * 100;
-			fprintf(stderr,"Possible error on exec #%u, difference of %.3f (%.1f%% error) [control=%.3f, experimental=%.3f] at row %d \n",exec_num,diff,perc,control[j],experimental[j],j);
+			fprintf(stderr,"Possible error on exec #%u, difference of %.3f (%.1f%% error) [control=%.3f, experimental=%.3f] at row %lu \n",exec_num,diff,perc,control[j],experimental[j],j);
 		}
 	}
 }
