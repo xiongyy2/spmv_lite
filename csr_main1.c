@@ -92,6 +92,7 @@ void float_array_comp(const float* control, const float* experimental, const uns
 {
 	unsigned long j;
 	float diff,perc;
+	bool comprslt=1;
 	for (j = 0; j < N; j++)
 	{
 		diff = experimental[j] - control[j];
@@ -99,8 +100,10 @@ void float_array_comp(const float* control, const float* experimental, const uns
 		{
 			perc = fabsf(diff/control[j]) * 100;
 			fprintf(stderr,"Possible error on exec #%u, difference of %.3f (%.1f%% error) [control=%.3f, experimental=%.3f] at row %lu \n",exec_num,diff,perc,control[j],experimental[j],j);
+			comprslt=0;
 		}
 	}
+	if(comprslt) printf("computation correct!\n");
 }
 
 int main(int argc, char *argv[])
