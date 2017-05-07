@@ -138,6 +138,7 @@ setting up parameters for default-----------------------------
 
 
     csr_matrix* csr = read_csr(&num_matrices,file_path);
+	if(verbosity) printf("finished reading csr_matrix from file.\n");
 
 //The other arrays
 	float *x_host = NULL, *y_host = NULL, /* *device_out[num_matrices],*/ *host_out=NULL;
@@ -148,20 +149,24 @@ setting up parameters for default-----------------------------
     {
         max_row_len = csr[ii].num_rows;
         y_host = float_array_realloc(y_host,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for y_host");
+		if(verbosity) printf("y_host alloced\n");
 		//para_out = realloc(para_out,sizeof(float)*max_row_len);
 		//check(para_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
 		para_out=float_array_realloc(para_out,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for 'para_out'");
+		if(verbosity) printf("para_out alloced\n");
         if(do_affirm)
         {
             //host_out = realloc(host_out,sizeof(float)*max_row_len);
             //check(host_out != NULL,"csr.main() - Heap Overflow! Cannot Allocate Space for 'host_out'");
 			host_out=float_array_realloc(host_out,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for 'host_out'");
+			if(verbosity) printf("host_out alloced\n");
         }
     }
     if(max_col_len < csr[ii].num_cols)
     {
         max_col_len = csr[ii].num_cols;
         x_host = float_array_realloc(x_host,csr[ii].num_cols,"csr.main() - Heap Overflow! Cannot Allocate Space for x_host");
+		if(verbosity) printf("x_host alloced\n");
     }
     for(int i1 = 0; i1 < max_col_len; i1++)
 	{
