@@ -49,9 +49,9 @@ void* float_new_array(const size_t N,const char* error_msg)
 
 int main(int argc, char *argv[])
 {
-    int num_row=2048;
-    int num_len=2048;
-    long num_nonzero=20489;
+    int num_row=5000;
+    int num_len=5000;
+    long num_nonzero=125002;
     unsigned long *row_ptr;
     unsigned long *col_idx;
     float *val;
