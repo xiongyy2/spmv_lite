@@ -123,7 +123,7 @@ setting up parameters for test-----------------------------
     do_affirm=1;
 	do_print=1;
     num_matrices=1;
-    file_path="csrmatrix_R1_N5000_D5000_S01_17-5-6-14-34";
+    file_path="csrmatrix_R1_N512_D5000_S01_17-5-2-22-7";
 //---------------------------------------------------------
 
     csr_matrix* csr = read_csr(&num_matrices,file_path);
