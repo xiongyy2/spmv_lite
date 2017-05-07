@@ -123,7 +123,7 @@ setting up parameters for default-----------------------------
     verbosity=1;
 	do_print=1;
     num_matrices=1;
-    file_path="csrmatrix_R1_N1024_D5000_S01_17-5-7-14-39";
+    //file_path="csrmatrix_R1_N1024_D5000_S01_17-5-7-14-39";
 //---------------------------------------------------------
 	FILE *file_in;
 	file_in=fopen("input","r");
