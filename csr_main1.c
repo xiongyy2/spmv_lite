@@ -148,6 +148,7 @@ setting up parameters for default-----------------------------
     if(max_row_len < csr[ii].num_rows)
     {
         max_row_len = csr[ii].num_rows;
+		if(verbosity) printf("max_row_len=%lu\n",max_row_len);
         //y_host = float_array_realloc(y_host,csr[ii].num_rows,"csr.main() - Heap Overflow! Cannot Allocate Space for y_host");
 		y_host=float_new_array(csr[ii].num_rows,"y_host - Heap Overflow! Cannot allocate space for y_host");
 		if(verbosity) printf("y_host alloced\n");
