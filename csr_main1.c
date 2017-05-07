@@ -131,7 +131,7 @@ setting up parameters for default-----------------------------
 	check(file_in != NULL,"Cannot Open Parameter Input File");
 	fscanf(file_in,"%s\n",file_path);
 	if(verbosity) printf("file_path=%s\n",file_path);
-	fscanf(file_in,"%u\n%u\n%u\n%u\n",do_affirm,verbosity,do_print,num_matrices);
+	fscanf(file_in,"%d\n%d\n%d\n%u\n",do_affirm,verbosity,do_print,num_matrices);
 	if(verbosity) printf("finished reading parameters from input file.\n");
 	fclose(file_in);
 
