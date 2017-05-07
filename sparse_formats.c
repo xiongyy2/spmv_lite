@@ -80,6 +80,7 @@ csr_matrix* read_csr(unsigned int* num_csr,const char* file_path)
 	read_count = fscanf(fp,"%u\n\n",num_csr);
 	check(read_count == 1,"sparse_formats.read_csr() - Input File Corrupted! Read count for num_csr differs from 1");
 	csr = malloc(sizeof(struct csr_matrix)*(*num_csr));
+	printf("csr strict alloced\n");
 
 	for(j=0; j<*num_csr; j++)
 	{
@@ -88,18 +89,21 @@ csr_matrix* read_csr(unsigned int* num_csr,const char* file_path)
 
 		read_count = 0;
 		csr[j].Ap = long_new_array(csr[j].num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
+		printf("csr.Ap alloced\n");
 		for(i=0; i<=csr[j].num_rows; i++)
 			read_count += fscanf(fp,"%lu ",csr[j].Ap+i);
 		check(read_count == (csr[j].num_rows+1),"sparse_formats.read_csr() - Input File Corrupted! Read count for Ap differs from csr[j].num_rows+1");
 
 		read_count = 0;
 		csr[j].Aj = long_new_array(csr[j].num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Aj");
+		printf("csr.Aj alloced\n");
 		for(i=0; i<csr[j].num_nonzeros; i++)
 			read_count += fscanf(fp,"%lu ",csr[j].Aj+i);
 		check(read_count == (csr[j].num_nonzeros),"sparse_formats.read_csr() - Input File Corrupted! Read count for Aj differs from csr[j].num_nonzeros");
 
 		read_count = 0;
 		csr[j].Ax = float_new_array(csr[j].num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ax");
+		printf("csr.Ax alloced\n");
 		for(i=0; i<csr[j].num_nonzeros; i++)
 			read_count += fscanf(fp,"%f ",csr[j].Ax+i);
 		check(read_count == (csr[j].num_nonzeros),"sparse_formats.read_csr() - Input File Corrupted! Read count for Ax differs from csr[j].num_nonzeros");
