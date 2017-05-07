@@ -3,6 +3,15 @@
 #include<stdbool.h>
 #include<math.h>
 
+void check(int b,const char* msg)
+{
+	if(!b)
+	{
+		fprintf(stderr,"error: %s\n\n",msg);
+		exit(-1);
+	}
+}
+
 void* long_new_array(const size_t N,const char* error_msg)
 {
 	void* ptr;
