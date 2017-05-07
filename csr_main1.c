@@ -125,6 +125,7 @@ setting up parameters for default-----------------------------
     num_matrices=1;
     //file_path="csrmatrix_R1_N1024_D5000_S01_17-5-7-14-39";
 //---------------------------------------------------------
+	file_path=(char*) malloc (99);
 	FILE *file_in;
 	file_in=fopen("input","r");
 	check(file_in != NULL,"Cannot Open Parameter Input File");
