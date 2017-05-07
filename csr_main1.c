@@ -34,9 +34,9 @@ void* int_new_array(const size_t N,const char* error_msg)
 	return ptr;
 }
 
-long* long_new_array(const size_t N,const char* error_msg)
+void* long_new_array(const size_t N,const char* error_msg)
 {
-	long* ptr;
+	void* ptr;
 	int err;
 	/*if (_deviceType == 3){
 		err = posix_memalign(&ptr,ACL_ALIGNMENT,N * sizeof(int));
@@ -51,9 +51,9 @@ long* long_new_array(const size_t N,const char* error_msg)
 	return ptr;
 }
 
-float* float_new_array(const size_t N,const char* error_msg)
+void* float_new_array(const size_t N,const char* error_msg)
 {
-	float* ptr;
+	void* ptr;
 	int err;
 	/*if (_deviceType == 3){
 		err = posix_memalign(&ptr,ACL_ALIGNMENT,N * sizeof(float));
