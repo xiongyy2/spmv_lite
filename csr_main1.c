@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 	unsigned int N = 512,num_execs=1,num_matrices,i,ii,iii,j,k,num_wg_sizes=0,num_kernels=0;
 	unsigned long start_time, end_time;
 	//struct timeval *tv;
-	char* file_path = NULL,*optptr;
+	char* file_path,*optptr;
 	void* tmp;
 
 /*
@@ -129,6 +129,7 @@ setting up parameters for default-----------------------------
 	file_in=fopen("input","r");
 	check(file_in != NULL,"Cannot Open Parameter Input File");
 	fscanf(file_in,"%s\n",file_path);
+	if(verbosity) printf("file_path=%s\n",file_path);
 	fscanf(file_in,"%u\n%u\n%u\n%u\n",do_affirm,verbosity,do_print,num_matrices);
 	if(verbosity) printf("finished reading parameters from input file.\n");
 	fclose(file_in);
