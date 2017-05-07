@@ -114,17 +114,25 @@ int main(int argc, char *argv[])
 	void* tmp;
 
 /*
-setting up parameters for test-----------------------------
+setting up parameters for default-----------------------------
 */
 	k=0;
 	i=0;
 	ii=0;
+	do_affirm=1;
     verbosity=1;
-    do_affirm=1;
 	do_print=1;
     num_matrices=1;
     file_path="csrmatrix_R1_N1024_D5000_S01_17-5-7-14-39";
 //---------------------------------------------------------
+	FILE *file_in;
+	file_in=fopen("input","r");
+	check(file_in != NULL,"Cannot Open Parameter Input File");
+	fscanf(file_in,"%s\n",file_path);
+	fscanf(file_in,"%u\n%u\n%u\n%u\n",do_affirm,verbosity,do_print,num_matrices);
+	if(verbosity) printf("finished reading parameters from input file.\n");
+
+
 
     csr_matrix* csr = read_csr(&num_matrices,file_path);
 
