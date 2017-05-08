@@ -5,7 +5,9 @@
 
 int main(int argc, char *argv[])
 {
-    unsigned int tile_ptr;
+    int tile_ptr;
     tile_ptr=-0;
-    printf("tile_ptr=%u\n",tile_ptr);
+    printf("tile_ptr=%d\n",tile_ptr);
+    int sign=signbit(tile_ptr);
+    printf("sign=%d\n",sign);
 }
