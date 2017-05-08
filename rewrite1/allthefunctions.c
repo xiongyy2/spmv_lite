@@ -110,7 +110,7 @@ double dtime()
     return (tseconds);
 }
 
-void read_csr_arrayonly(unsigned int* num_csr,unsigned long &num_rows, unsigned long &num_cols, unsigned long &num_nonzeros, unsigned long &density_ppm, double &density_perc,double &nz_per_row,double &stddev, unsigned long &rowp, unsigned long &coli, float &valu, const char* file_path)
+void read_csr_arrayonly(unsigned int* num_csr,unsigned long num_rows, unsigned long num_cols, unsigned long num_nonzeros, unsigned long density_ppm, double density_perc,double nz_per_row,double stddev, unsigned long* rowp, unsigned long* coli, float* valu, const char* file_path)
 {
     FILE* fp;
 	long i,j,read_count;

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	unsigned long num_rows;
     unsigned long num_cols;
     unsigned long num_nonzeros;
-	unsigned long density_ppm;
+	//unsigned long density_ppm;
 	double density_perc,nz_per_row,stddev;
     unsigned long *row_ptr;
     unsigned long *col_idx;
@@ -51,7 +51,7 @@ setting up parameters for default-----------------------------
 
 
     //csr_matrix* csr = read_csr(&num_matrices,file_path);
-	read_csr_arrayonly(&num_matrices,num_rows,num_cols,num_nonzeros,density_ppm,density_perc,nz_per_row,stddev,row_ptr,col_idx,val,file_path);
+	read_csr_arrayonly(&num_matrices,num_rows,num_cols,num_nonzeros,density_ppm,density_perc,nz_per_row,stddev,&row_ptr,&col_idx,&val,file_path);
 
 	if(verbosity) printf("finished reading csr_matrix from file.\n");
 
@@ -99,13 +99,13 @@ setting up parameters for default-----------------------------
 	{
 		t0=dtime();
 		//spmv_csr_cpu(&csr[0],x_host,y_host,host_out);
-		spmv_csr_cpu(num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x_host,y_host,host_out);
+		spmv_csr_cpu(num_rows,num_cols,num_nonzeros,&row_ptr,&col_idx,&val,&x_host,&y_host,&host_out);
 		t1=dtime();
 		printf("cpu time(s): %lf\n", t1-t0);
 	}
 	t0=dtime();
 	//spmv_csr_acc(&csr[0],x_host,y_host,para_out);
-	spmv_csr_acc(num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x_host,y_host,para_out);
+	spmv_csr_acc(num_rows,num_cols,num_nonzeros,&row_ptr,&col_idx,&val,&x_host,&y_host,&para_out);
 	t1=dtime();
 	printf("acc/omp time(s): %lf\n", t1-t0);
 
@@ -128,7 +128,10 @@ setting up parameters for default-----------------------------
 	if(verbosity) printf("freed host_out\n");
 	free(para_out);
 	if(verbosity) printf("freed para_out\n");
-	free_csr(csr,num_matrices);
+	//free_csr(csr,num_matrices);
+	free(row_ptr);
+	free(col_idx);
+	free(val);
 	if(verbosity) printf("freed csr\n");
 	return 0;
 }
