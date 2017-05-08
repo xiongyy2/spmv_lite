@@ -59,31 +59,31 @@ setting up parameters for default-----------------------------
 	fp = fopen(file_path,"r");
 	check(fp != NULL,"sparse_formats.read_csr() - Cannot Open Input File");
 
-	read_count = fscanf(fp,"%u\n\n",num_csr);
+	read_count = fscanf(fp,"%u\n\n",num_matrices);
 	check(read_count == 1,"sparse_formats.read_csr() - Input File Corrupted! Read count for num_csr differs from 1");
 	printf("csr strict alloced\n");
 
-	for(jr=0; jr<*num_csr; jr++)
+	for(jr=0; jr<num_matrices; jr++)
 	{
 		read_count = fscanf(fp,"%lu\n%lu\n%lu\n%lu\n%lf\n%lf\n%lf\n",num_rows,num_cols,num_nonzeros,density_ppm,density_perc,nz_per_row,stddev);
 		check(read_count == 7,"sparse_formats.read_csr() - Input File Corrupted! Read count for header info differs from 7");
 
 		read_count = 0;
-		rowp = long_new_array(num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
+		row_ptr = long_new_array(num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
 		printf("csr.Ap alloced\n");
 		for(ir=0; ir<=num_rows; ir++)
 			read_count += fscanf(fp,"%lu ",rowp+ir);
 		check(read_count == (num_rows+1),"sparse_formats.read_csr() - Input File Corrupted! Read count for Ap differs from csr[j].num_rows+1");
 
 		read_count = 0;
-		coli = long_new_array(num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Aj");
+		col_idx = long_new_array(num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Aj");
 		printf("csr.Aj alloced\n");
 		for(ir=0; ir<num_nonzeros; ir++)
 			read_count += fscanf(fp,"%lu ",coli+ir);
 		check(read_count == (num_nonzeros),"sparse_formats.read_csr() - Input File Corrupted! Read count for Aj differs from csr[j].num_nonzeros");
 
 		read_count = 0;
-		valu = float_new_array(num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ax");
+		val = float_new_array(num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ax");
 		printf("csr.Ax alloced\n");
 		for(ir=0; ir<num_nonzeros; ir++)
 			read_count += fscanf(fp,"%f ",valu+ir);
