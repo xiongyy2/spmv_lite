@@ -52,7 +52,7 @@ setting up parameters for default-----------------------------
 	fscanf(file_in,"%d\n%d\n%d\n%u\n",&do_affirm,&verbosity,&do_print,&num_matrices);
 	if(verbosity) printf("finished reading parameters from input file.\n");
 	fclose(file_in);
-	printf("num_matrices=%u\n",num_matrices);
+	printf("num_matrices=%u\n",&num_matrices);
 
 
 
@@ -65,7 +65,7 @@ setting up parameters for default-----------------------------
 	fp = fopen(file_path,"r");
 	//check(fp != NULL,"sparse_formats.read_csr() - Cannot Open Input File");
 	printf("csr matrix file opened\n");
-	read_count = fscanf(fp,"%u\n\n",num_matrices);
+	read_count = fscanf(fp,"%u\n\n",&num_matrices);
 	if(verbosity) printf("now read_count=%u\n",read_count);
 	//check(read_count == 1,"sparse_formats.read_csr() - Input File Corrupted! Read count for num_csr differs from 1");
 	printf("csr struct alloced\n");
@@ -175,6 +175,7 @@ setting up parameters for default-----------------------------
 	free(row_ptr);
 	free(col_idx);
 	free(val);
+	free(file_path);
 	if(verbosity) printf("freed csr\n");
 	return 0;
 }
