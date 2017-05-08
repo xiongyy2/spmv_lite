@@ -52,7 +52,7 @@ setting up parameters for default-----------------------------
 	fscanf(file_in,"%d\n%d\n%d\n%u\n",&do_affirm,&verbosity,&do_print,&num_matrices);
 	if(verbosity) printf("finished reading parameters from input file.\n");
 	fclose(file_in);
-	printf("num_matrices=%u\n",&num_matrices);
+	if(verbosity) printf("num_matrices=%u\n",num_matrices);
 
 
 
@@ -68,7 +68,7 @@ setting up parameters for default-----------------------------
 	read_count = fscanf(fp,"%u\n\n",&num_matrices);
 	if(verbosity) printf("now read_count=%u\n",read_count);
 	//check(read_count == 1,"sparse_formats.read_csr() - Input File Corrupted! Read count for num_csr differs from 1");
-	printf("csr struct alloced\n");
+	printf("starting allocation and reading data\n");
 
 	for(jr=0; jr<num_matrices; jr++)
 	{
