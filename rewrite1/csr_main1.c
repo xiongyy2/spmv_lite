@@ -17,6 +17,11 @@ int main(int argc, char *argv[])
 	char* file_path,*optptr;
 	void* tmp;
 
+	//The other arrays
+	float *x_host , *y_host , /* *device_out[num_matrices],*/ *host_out;
+	float *para_out;//store parallel result
+	unsigned long max_row_len=0,max_col_len=0;
+
 	unsigned long num_rows;
     unsigned long num_cols;
     unsigned long num_nonzeros;
@@ -94,11 +99,7 @@ setting up parameters for default-----------------------------
 
 	if(verbosity) printf("finished reading csr_matrix from file.\n");
 
-//The other arrays
-	float *x_host , *y_host , /* *device_out[num_matrices],*/ *host_out;
-	float *para_out;//store parallel result
-	unsigned long max_row_len=0,max_col_len=0;
-	if(verbosity) printf("new ii=%u\n",ii);
+	if(verbosity) printf("now ii=%u\n",ii);
     if(max_row_len < num_rows)
     {
         max_row_len = num_rows;
