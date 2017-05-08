@@ -72,7 +72,7 @@ setting up parameters for default-----------------------------
 
 	for(jr=0; jr<num_matrices; jr++)
 	{
-		read_count = fscanf(fp,"%lu\n%lu\n%lu\n%lu\n%lf\n%lf\n%lf\n",num_rows,num_cols,num_nonzeros,density_ppm,density_perc,nz_per_row,stddev);
+		read_count = fscanf(fp,"%lu\n%lu\n%lu\n%lu\n%lf\n%lf\n%lf\n",&num_rows,&num_cols,&num_nonzeros,&density_ppm,&density_perc,&nz_per_row,&stddev);
 		check(read_count == 7,"sparse_formats.read_csr() - Input File Corrupted! Read count for header info differs from 7");
 		if(verbosity) printf("read parameters of the matrix.\n");
 
