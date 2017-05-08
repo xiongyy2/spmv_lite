@@ -66,6 +66,7 @@ setting up parameters for default-----------------------------
 	check(fp != NULL,"sparse_formats.read_csr() - Cannot Open Input File");
 	printf("csr matrix file opened\n");
 	read_count = fscanf(fp,"%u\n\n",num_matrices);
+	if(verbosity) printf("now read_count=%u\n",read_count);
 	check(read_count == 1,"sparse_formats.read_csr() - Input File Corrupted! Read count for num_csr differs from 1");
 	printf("csr strict alloced\n");
 
