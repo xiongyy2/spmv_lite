@@ -72,21 +72,21 @@ setting up parameters for default-----------------------------
 		row_ptr = long_new_array(num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
 		printf("csr.Ap alloced\n");
 		for(ir=0; ir<=num_rows; ir++)
-			read_count += fscanf(fp,"%lu ",rowp+ir);
+			read_count += fscanf(fp,"%lu ",row_ptr+ir);
 		check(read_count == (num_rows+1),"sparse_formats.read_csr() - Input File Corrupted! Read count for Ap differs from csr[j].num_rows+1");
 
 		read_count = 0;
 		col_idx = long_new_array(num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Aj");
 		printf("csr.Aj alloced\n");
 		for(ir=0; ir<num_nonzeros; ir++)
-			read_count += fscanf(fp,"%lu ",coli+ir);
+			read_count += fscanf(fp,"%lu ",col_idx+ir);
 		check(read_count == (num_nonzeros),"sparse_formats.read_csr() - Input File Corrupted! Read count for Aj differs from csr[j].num_nonzeros");
 
 		read_count = 0;
 		val = float_new_array(num_nonzeros,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ax");
 		printf("csr.Ax alloced\n");
 		for(ir=0; ir<num_nonzeros; ir++)
-			read_count += fscanf(fp,"%f ",valu+ir);
+			read_count += fscanf(fp,"%f ",val+ir);
 		check(read_count == (num_nonzeros),"sparse_formats.read_csr() - Input File Corrupted! Read count for Ax differs from csr[j].num_nonzeros");
 	}
 
