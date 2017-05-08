@@ -52,6 +52,7 @@ setting up parameters for default-----------------------------
 	fscanf(file_in,"%d\n%d\n%d\n%u\n",&do_affirm,&verbosity,&do_print,&num_matrices);
 	if(verbosity) printf("finished reading parameters from input file.\n");
 	fclose(file_in);
+	printf("num_matrices=%u\n",num_matrices);
 
 
 
