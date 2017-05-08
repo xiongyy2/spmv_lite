@@ -72,6 +72,7 @@ setting up parameters for default-----------------------------
 	{
 		read_count = fscanf(fp,"%lu\n%lu\n%lu\n%lu\n%lf\n%lf\n%lf\n",num_rows,num_cols,num_nonzeros,density_ppm,density_perc,nz_per_row,stddev);
 		check(read_count == 7,"sparse_formats.read_csr() - Input File Corrupted! Read count for header info differs from 7");
+		if(verbosity) printf("read parameters of the matrix.\n");
 
 		read_count = 0;
 		row_ptr = long_new_array(num_rows+1,"sparse_formats.read_csr() - Heap Overflow! Cannot allocate space for csr.Ap");
