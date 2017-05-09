@@ -83,6 +83,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 
     unsigned long p_cmplt;//number of complete tiles
     p_cmplt=(unsigned long)floor((double)num_nonzeros/(double)omega/(double)sigma);
+    printf("p_cmplt=%lu\n",p_cmplt);
 
     unsigned long* tile_ptr;
     tile_ptr=long_new_array(p+1,"Heap Overflow! Cannot allocate space for tile_ptr\n");
@@ -250,26 +251,30 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         free(tmp);
         free(last_tmp);
     }
-    //last incomplete tile
-    unsigned long row,row_start,row_end,jj;
-	float sum = 0;
-    //tile_ptr[0 to p]
-	for(row=tile_ptr[p-1]; row < num_rows; row++)
-	{
-        if (!bit_flag[row_ptr[row]])
+    
+    if(p>p_cmplt)
+    {
+        //last incomplete tile
+        unsigned long row,row_start,row_end,jj;
+        float sum = 0;
+        //tile_ptr[0 to p]
+        for(row=tile_ptr[p-1]; row < num_rows; row++)
         {
-            sum=0;
-        }
-        else
-        {
-            sum = y[row];
-        }
-		row_start = row_ptr[row];
-		row_end   = row_ptr[row+1];
+            if (!bit_flag[row_ptr[row]])
+            {
+                sum=0;
+            }
+            else
+            {
+                sum = y[row];
+            }
+            row_start = row_ptr[row];
+            row_end   = row_ptr[row+1];
 
-		for (jj = row_start; jj < row_end; jj++){
-			sum += val[jj] * x[col_idx[jj]];
-		}
-		out[row] += sum;
-	}
+            for (jj = row_start; jj < row_end; jj++){
+                sum += val[jj] * x[col_idx[jj]];
+            }
+            out[row] += sum;
+        }
+    }
 }
