@@ -282,7 +282,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 }
             }
             if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment*/
-            last_tmp[i]=sum;
+            last_tmp[i]=sum;//end of a blue sub-segment
         }
         fast_segmented_sum1(tmp,seg_offset);
         
@@ -303,14 +303,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         //tile_ptr[0 to p]
         for(row=tile_ptr[p_cmplt]; row < num_rows; row++)
         {
-            if (!bit_flag[row_ptr[row]])
-            {
-                sum=0;
-            }
-            else
-            {
-                sum = y[row];
-            }
+            sum = y[row];
             row_start = row_ptr[row];
             row_end   = row_ptr[row+1];
 
