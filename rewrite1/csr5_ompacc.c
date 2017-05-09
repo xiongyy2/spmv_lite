@@ -301,7 +301,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         unsigned long row,row_start,row_end,jj;
         float sum = 0;
         //tile_ptr[0 to p]
-        for(row=tile_ptr[p-1]; row < num_rows; row++)
+        for(row=tile_ptr[p_cmplt]; row < num_rows; row++)
         {
             if (!bit_flag[row_ptr[row]])
             {
