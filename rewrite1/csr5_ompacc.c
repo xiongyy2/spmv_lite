@@ -79,6 +79,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 
     unsigned long p;//number of tiles
     p=(unsigned long)ceil((double)num_nonzeros/(double)omega/(double)sigma);
+    printf("p=%lu\n",p);
 
     unsigned long p_cmplt;//number of complete tiles
     p_cmplt=(unsigned long)floor((double)num_nonzeros/(double)omega/(double)sigma);
@@ -88,7 +89,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 
     int* tile_ptr_empty;
     tile_ptr_empty=malloc((p+1)*sizeof(int));
-    memset(tile_ptr_empty,0,p+1); //0 if tile contains no empty row
+    memset(tile_ptr_empty,0,(p+1)*sizeof(int)); //0 if tile contains no empty row
 
 //generating tile_ptr and tile_ptr_empty--------------
     for (unsigned long tid=0;tid<p+1;tid++)
@@ -111,7 +112,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 //generating bit_flag-----------------------------
     int* bit_flag;
     bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(int));
-    memset(bit_flag,0,(p_cmplt*omega*sigma));
+    memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(int));
     for (unsigned long i=0;i<num_rows;i++)
     {
         bit_flag[row_ptr[i]]=1;//first nonzero entry of a row
@@ -132,7 +133,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         seg_offset=malloc(omega*sizeof(int));
         int* tmp_bit;
         tmp_bit=malloc(omega*sizeof(int));
-        memset(tmp_bit,0,omega);
+        memset(tmp_bit,0,omega*sizeof(int));
         for (int i=0;i<omega;i++)
         {
             y_offset[i]=0;
@@ -193,7 +194,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 
         float* tmp;
         tmp=malloc(omega*sizeof(float));
-        memset(tmp,0,omega);
+        memset(tmp,0,omega*sizeof(float));
         float* last_tmp;
         last_tmp=malloc(omega*sizeof(float));
         for (int i=0;i<omega;i++)
