@@ -56,7 +56,7 @@ setting up parameters for default-----------------------------
 
 
 	//for test
-	do_print=1;
+	//do_print=1;
 
     //csr_matrix* csr = read_csr(&num_matrices,file_path);
 	//read_csr_arrayonly(&num_matrices,&num_rows,&num_cols,&num_nonzeros,&density_ppm,density_perc,nz_per_row,stddev,row_ptr,col_idx,val,file_path);
