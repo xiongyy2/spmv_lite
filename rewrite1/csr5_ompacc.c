@@ -226,8 +226,15 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                         seal_head=1;
                     }
                 }
+                for (int jj=j+1;jj<sigma;jj++)
+                {
+                    if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                    {
+                        seal_tail=1;
+                    }
+                }
                 //if(ptr<num_nonzeros-sigma)
-                if(i<omega-1)
+                /*if(i<omega-1)
                 {
                     for (int jj=j+1;jj<sigma;jj++)
                     {
@@ -246,7 +253,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                             seal_tail=1;
                         }
                     }
-                }
+                }*/
                 int next_bit_flag=0;
                 if (j<sigma-1) next_bit_flag=bit_flag[ptr+1];
                 else next_bit_flag=1;
