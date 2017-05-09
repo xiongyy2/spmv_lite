@@ -213,7 +213,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //check bit_flag[ptr]
                 int seal_head=0;
                 int seal_tail=0;
-                for (int jj=0;jj<j+1;j++)
+                for (int jj=0;jj<j+1;jj++)
                 {
                     if (bit_flag[tid*omega*sigma+i*sigma+jj])
                     {
