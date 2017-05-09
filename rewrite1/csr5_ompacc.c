@@ -9,16 +9,16 @@ unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd
     {
         unsigned long m;
         m=(unsigned long)floor((double)(left+right)/(double)2.0);
-        printf("m=%lu\n",m);
+        //printf("m=%lu\n",m);
         if (row_ptr[m]<bnd)
         {
             left=m+1;
-            printf("left=%lu\n",left);
+            //printf("left=%lu\n",left);
         }
         else if (row_ptr[m]>bnd)
         {
             right=m-1;
-            printf("right=%lu\n",right);
+            //printf("right=%lu\n",right);
         }
         else
         {
@@ -188,6 +188,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                         if (idx<0) idx=0;
                         idx=idx-tile_ptr[tid];
                         empty_offset[eid]=idx;
+                        printf("tid=%lu, empty_offset[%d]=%lu\n",tid,eid,idx);
                         eid=eid+1;
                     }
                 }
