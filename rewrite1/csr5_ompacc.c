@@ -194,8 +194,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             {
                 y_offset[i]=empty_offset[y_offset[i]];
             }
+            printf("empty_offset generated\n");
         }
-        printf("empty_offset generated\n");
+        
 
 
         float* tmp;
@@ -209,8 +210,8 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             for (int j=0;j<sigma;j++)
             {
                 unsigned long ptr=tid*omega*sigma+i*sigma+j;
-                unsigned long ptr1=tid*omega*sigma+j*omega+i;
-                sum=sum+val[ptr1]*x[col_idx[ptr1]];
+                //unsigned long ptr1=tid*omega*sigma+j*omega+i;
+                sum=sum+val[ptr]*x[col_idx[ptr]];
                 //check bit_flag[ptr]
                 int seal_head=0;
                 int seal_tail=0;

@@ -28,7 +28,7 @@ unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd
             return m;
         }
     }
-    return right;
+    return left;
 }
 
 int main(int argc, char *argv[])
