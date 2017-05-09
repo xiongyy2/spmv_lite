@@ -97,10 +97,10 @@ void float_array_comp(const float* control, const float* experimental, const uns
 			fprintf(stderr,"Possible error on exec #%u, difference of %.3f (%.1f%% error) [control=%.3f, experimental=%.3f] at row %lu \n",exec_num,diff,perc,control[j],experimental[j],j);
 			comprslt=0;
 		}
-		else
+		/*else
 		{
 			printf("row %lu correct\n",j);
-		}
+		}*/
 	}
 	if(comprslt) printf("computation correct!\n");
 }
