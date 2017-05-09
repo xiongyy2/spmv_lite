@@ -109,7 +109,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             if (row_ptr[rid]==row_ptr[rid+1])
             {
                 tile_ptr_empty[tid]=1; //1 if tile contains empty row
-                break;
+                //break;
             }
         }
     }
