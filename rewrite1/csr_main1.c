@@ -110,12 +110,12 @@ setting up parameters for default-----------------------------
 		y_host=float_new_array(num_rows,"y_host - Heap Overflow! Cannot allocate space for y_host");
 		if(verbosity) printf("y_host alloced\n");
 		para_out=float_new_array(num_rows,"para_out - Heap Overflow! Cannot allocate space for para_out");
-		memset(para_out,0.0,num_rows);
+		memset(para_out,0,num_rows*sizeof(float));
 		if(verbosity) printf("para_out alloced\n");
         if(do_affirm)
         {
 			host_out=float_new_array(num_rows,"host_out - Heap Overflow! Cannot allocate space for host_out");
-			memset(host_out,0.0,num_rows);
+			memset(host_out,0,num_rows*sizeof(float));
 			if(verbosity) printf("host_out alloced\n");
         }
     }
