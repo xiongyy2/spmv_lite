@@ -25,7 +25,8 @@ unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd
             return m;
         }
     }
-    return left;
+    if (right<0) right=0;
+    return right;
 }
 void segmented_sum1(int* in, int* flag)
 {
@@ -98,8 +99,8 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     {
         unsigned long bnd;
         bnd=tid*omega*sigma;
-        tile_ptr[tid]=binary_search1(num_rows+1,row_ptr,bnd)-1;
-        if (tile_ptr[tid]<0) tile_ptr[tid]=0;
+        tile_ptr[tid]=binary_search1(num_rows+1,row_ptr,bnd);
+        //if (tile_ptr[tid]<0) tile_ptr[tid]=0;
     }
     for (unsigned long tid=0;tid<p;tid++)
     {
@@ -184,8 +185,8 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                     unsigned long index=tid*omega*sigma+i*sigma+j;
                     if (bit_flag[index])
                     {
-                        unsigned long idx=binary_search1(num_rows+1,row_ptr,index)-1;
-                        if (idx<0) idx=0;
+                        unsigned long idx=binary_search1(num_rows+1,row_ptr,index);
+                        //if (idx<0) idx=0;
                         idx=idx-tile_ptr[tid];
                         empty_offset[eid]=idx;
                         printf("tid=%lu, empty_offset[%d]=%lu\n",tid,eid,idx);
