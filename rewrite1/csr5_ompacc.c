@@ -317,7 +317,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             for (jj = row_start; jj < row_end; jj++){
                 sum += val[jj] * x[col_idx[jj]];
             }
-            out[row] += sum;
+            out[row] = sum;
         }
     }
 }
