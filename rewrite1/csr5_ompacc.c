@@ -253,7 +253,8 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //if (i<omega-1) next_bit_flag=bit_flag[ptr+1];
                 //else if(j<sigma-1) next_bit_flag=bit_flag[ptr+1];
                 //else next_bit_flag=1;
-                if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (j==(sigma-1)) ) )//end of a red sub-segment
+                //if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (j==(sigma-1)) ) )//end of a red sub-segment
+                if (((!seal_head) && next_bit_flag) )//end of a red sub-segment
                 {
                     tmp[i-1]=sum;
                     sum=0;
