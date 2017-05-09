@@ -55,6 +55,8 @@ setting up parameters for default-----------------------------
 	if(verbosity) printf("num_matrices=%u\n",num_matrices);
 
 
+	//for test
+	do_print=1;
 
     //csr_matrix* csr = read_csr(&num_matrices,file_path);
 	//read_csr_arrayonly(&num_matrices,&num_rows,&num_cols,&num_nonzeros,&density_ppm,density_perc,nz_per_row,stddev,row_ptr,col_idx,val,file_path);
@@ -101,6 +103,32 @@ setting up parameters for default-----------------------------
 	fclose(fp);
 
 	if(verbosity) printf("finished reading csr_matrix from file.\n");
+
+	if(do_print)
+	{
+		int row_count=0, nz_count=0;
+		float val1;
+		while(row_ptr[row_count+1]==nz_count)
+			row_count++;
+		for(int ind=0; ind<num_rows; ind++)
+		{
+			printf("[");
+			for(int ind2=0; ind2<num_cols; ind2++)
+			{
+				if(ind == row_count && ind2 == col_idx[nz_count])
+				{
+					val1 = val[nz_count++];
+					while(row_ptr[row_count+1] == nz_count)
+						row_count++;
+				}
+				else
+					val1 = 0.0;
+				printf("%6.2f",val1);
+			}
+			printf("]\n");
+		}
+		printf("\n");
+	}
 
 	if(verbosity) printf("now ii=%u\n",ii);
     if(max_row_len < num_rows)
