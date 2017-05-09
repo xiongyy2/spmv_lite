@@ -86,6 +86,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 
     unsigned long* tile_ptr;
     tile_ptr=long_new_array(p+1,"Heap Overflow! Cannot allocate space for tile_ptr\n");
+    printf("tile_ptr allocated\n");
 
     int* tile_ptr_empty;
     tile_ptr_empty=malloc((p+1)*sizeof(int));
@@ -109,6 +110,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             }
         }
     }
+    printf("tile_ptr generated\n");
 //generating bit_flag-----------------------------
     int* bit_flag;
     bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(int));
@@ -121,6 +123,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     {
         bit_flag[i*omega*sigma]=1;//first entry of each tile
     }
+    printf("bit_flag generated\n");
 
 
 
@@ -160,6 +163,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         //segmented_sum for seg_offset
         segmented_sum1(seg_offset,tmp_bit);
         free(tmp_bit);
+        printf("y_offset seg_offset generated\n");
         //generating empty_offset-------------------------
         if(tile_ptr_empty[tid])//if this tile has empty row
         {
@@ -190,6 +194,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 y_offset[i]=empty_offset[y_offset[i]];
             }
         }
+        printf("empty_offset generated\n");
 
 
         float* tmp;
