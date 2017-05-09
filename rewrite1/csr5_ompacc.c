@@ -220,13 +220,21 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                         seal_head=1;
                     }
                 }
-                for (int jj=j+1;jj<sigma+1;jj++)
+                if(ptr<num_nonzeros-1)
                 {
-                    if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                    for (int jj=j+1;jj<sigma+1;jj++)
                     {
-                        seal_tail=1;
+                        if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                        {
+                            seal_tail=1;
+                        }
                     }
                 }
+                else
+                {
+                    seal_tail=1;
+                }
+        
                 if (((!seal_head) && seal_tail && bit_flag[ptr+1]) || ( (!seal_head) && (!seal_tail) && (j==sigma-1) ) )//end of a red sub-segment
                 {
                     tmp[i-1]=sum;
