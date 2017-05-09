@@ -166,7 +166,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         //segmented_sum for seg_offset
         segmented_sum1(seg_offset,tmp_bit);
         free(tmp_bit);
-        printf("y_offset seg_offset generated\n");
+        //printf("y_offset seg_offset generated\n");
         //generating empty_offset-------------------------
         if(tile_ptr_empty[tid])//if this tile has empty row
         {
@@ -189,7 +189,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                         //if (idx<0) idx=0;
                         idx=idx-tile_ptr[tid];
                         empty_offset[eid]=idx;
-                        printf("tid=%lu, empty_offset[%d]=%lu\n",tid,eid,idx);
+                        //printf("tid=%lu, empty_offset[%d]=%lu\n",tid,eid,idx);
                         eid=eid+1;
                     }
                 }
