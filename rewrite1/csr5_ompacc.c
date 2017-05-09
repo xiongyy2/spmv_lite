@@ -220,7 +220,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                         seal_head=1;
                     }
                 }
-                if(ptr<num_nonzeros-1)
+                if(ptr<num_nonzeros-sigma)
                 {
                     for (int jj=j+1;jj<sigma+1;jj++)
                     {
@@ -234,13 +234,15 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 {
                     seal_tail=1;
                 }
-        
-                if (((!seal_head) && seal_tail && bit_flag[ptr+1]) || ( (!seal_head) && (!seal_tail) && (j==sigma-1) ) )//end of a red sub-segment
+                int next_bit_flag=0;
+                if (ptr<num_nonzeros-1) next_bit_flag=bit_flag[ptr+1];
+                else next_bit_flag=1;
+                if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (j==sigma-1) ) )//end of a red sub-segment
                 {
                     tmp[i-1]=sum;
                     sum=0;
                 }
-                else if ( seal_head && seal_tail && bit_flag[ptr+1] )//end of a green segment
+                else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
                 {
                     out[tile_ptr[tid]+y_offset[i]]=sum/*+y[tile_ptr[tid]+y_offset[i]]*/;
                     y_offset[i]=y_offset[i]+1;
