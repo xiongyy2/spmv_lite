@@ -261,7 +261,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //else if(j<sigma-1) next_bit_flag=bit_flag[ptr+1];
                 //else next_bit_flag=1;
                 //if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (j==(sigma-1)) ) )//end of a red sub-segment
-                if (((!seal_head) && next_bit_flag) )//end of a red sub-segment
+                if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
                 {
                     tmp[i-1]=sum;
                     sum=0;
@@ -273,7 +273,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                     sum=0;
                 }
             }
-            int seal_head2=0;
+            /*int seal_head2=0;
             for (int j=0;j<sigma;j++)
             {
                 if (bit_flag[tid*omega*sigma+i*sigma+j])
@@ -281,7 +281,8 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                     seal_head2=1;
                 }
             }
-            if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment
+            if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment*/
+            last_tmp[i]=sum;
         }
         fast_segmented_sum1(tmp,seg_offset);
         
