@@ -133,7 +133,7 @@ setting up parameters for default-----------------------------
 	for(int i2 = 0; i2 < max_row_len; i2++)
 	{
 		//y_host[i2] = rand() / (RAND_MAX + 2.0);
-		y_host[i2]=0;
+		y_host[i2]=0.0;
 		if(do_print) printf("y[%d] = %6.2f\n",i2,y_host[i2]);
 	}
 
