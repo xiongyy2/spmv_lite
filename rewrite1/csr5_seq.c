@@ -268,7 +268,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 }
                 else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
                 {
-                    out[tile_ptr[tid]+y_offset[i]]+=sum/*+y[tile_ptr[tid]+y_offset[i]]*/;
+                    out[tile_ptr[tid]+y_offset[i]]=sum/*+y[tile_ptr[tid]+y_offset[i]]*/;
                     y_offset[i]=y_offset[i]+1;
                     sum=0;
                 }
