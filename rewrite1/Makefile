@@ -6,7 +6,7 @@ ACCFLAGS = -acc -ta=radeon -Minfo=accel
 OMPFLAGS = -fast -mp -Minfo
 RM       = rm
 
-BIN =  main_omp main_acc main_cpu_gcc main_cpu_pgcc
+BIN =  main_omp main_acc main_cpu_gcc main_cpu_pgcc main_csr5_seq
 
 all: $(BIN)
 
@@ -15,6 +15,9 @@ main_acc: csr_main1.c csr_cpu.c csr_ompacc.c sparse_formats.c ziggurat.c
 
 main_omp: csr_main1.c csr_cpu.c csr_ompacc.c allthefunctions.c
 	$(CC) $(CCFLAGS) $(OMPFLAGS) -o $@ $^
+
+main_csr5_seq: csr_main1.c csr_cpu.c csr5_ompacc.c allthefunctions.c
+	$(CC) $(CCFLAGS) -o $@ $^
 
 clean:
 	$(RM) $(BIN) *.o
