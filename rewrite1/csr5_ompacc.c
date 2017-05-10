@@ -145,6 +145,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 #pragma acc data copy(num_rows,num_cols,num_nonzeros,row_ptr[0:num_rows],col_idx[0:num_nonzeros-1],val[0:num_nonzeros-1],x[0:num_cols-1],y[0:num_rows-1],out[0:num_rows-1],bit_flag[0:len_bitflag-1])
 {
 #pragma acc parallel
+{
 #pragma omp parallel private(tid)
 {
 #pragma omp for schedule(dynamic)
@@ -335,6 +336,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         free(tmp);
         free(last_tmp);
     }
+}
 }
 }
     if(p>p_cmplt)
