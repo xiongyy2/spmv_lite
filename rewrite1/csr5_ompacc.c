@@ -1,4 +1,5 @@
 #include "allthefunctions.h"
+#include <stdatomic.h>
 
 unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd)
 {
@@ -293,6 +294,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 }
                 else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
                 {
+                    #pragma omp atomic
                     out[tile_ptr[tid]+y_offset[i7]]+=sum;//confirmed correct
                     y_offset[i7]=y_offset[i7]+1;
                     sum=0;
@@ -315,6 +317,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         for (i8=0;i8<omega;i8++)
         {
             last_tmp[i8]=last_tmp[i8]+tmp[i8];
+            #pragma omp atomic
             out[tile_ptr[tid]+y_offset[i8]]+=last_tmp[i8]/*+y[tile_ptr[tid]+y_offset[i]]*/;
         }
         free(tmp);
