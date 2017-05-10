@@ -103,12 +103,14 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     unsigned long tid=0;
     unsigned long bnd=0;
     unsigned long rid=0;
+#pragma omp parallel for private(tid, bnd)
     for (tid=0;tid<p+1;tid++)
     {
         bnd=tid*omega*sigma;
         tile_ptr[tid]=binary_search1(num_rows+1,row_ptr,bnd);
         //if (tile_ptr[tid]<0) tile_ptr[tid]=0;
     }
+#pragma omp parallel for private(tid, rid)
     for (tid=0;tid<p;tid++)
     {
         for (rid=tile_ptr[tid];rid<tile_ptr[tid+1]+1;rid++)
@@ -127,10 +129,12 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(char));
     memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(char));
     unsigned long i1;
+#pragma omp parallel for private(i1)
     for (i1=0;i1<num_rows;i1++)
     {
         bit_flag[row_ptr[i1]]=1;//first nonzero entry of a row
     }
+#pragma omp parallel for private(i1)
     for (i1=0;i1<p_cmplt;i1++)
     {
         bit_flag[i1*omega*sigma]=1;//first entry of each tile
@@ -323,6 +327,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         unsigned long row,row_start,row_end,jj;
         float sum = 0;
         //tile_ptr[0 to p]
+#pragma omp parallel for private(row, row_start, row_end, jj, sum)
         for(row=tile_ptr[p_cmplt]; row < num_rows; row++)
         {
             sum = y[row];
