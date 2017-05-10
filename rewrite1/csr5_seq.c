@@ -77,7 +77,10 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 {
     int omega=4;
     //int sigma=4;
-    int sigma=ceil((double)num_nonzeros/(double)num_rows);
+    int sigma;
+    int nz_row=ceil((double)num_nonzeros/(double)num_rows);
+    if (nz_row<5) sigma=4;
+    else sigma=nz_row;
 
     unsigned long p;//number of tiles
     p=(unsigned long)ceil((double)num_nonzeros/(double)omega/(double)sigma);
