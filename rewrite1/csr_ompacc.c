@@ -15,7 +15,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 			sum = y[row];
 			row_start = row_ptr[row];
 			row_end   = row_ptr[row+1];
-#pragma acc loop
+#pragma acc loop private(jj,sum)
 			for (jj = row_start; jj < row_end; jj++){
 				sum += val[jj] * x[col_idx[jj]];
 			}
