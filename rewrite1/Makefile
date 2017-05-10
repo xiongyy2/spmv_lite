@@ -1,7 +1,7 @@
 
 CC       = pgcc
 CCFLAGS  = 
-ACCFLAGS = -acc -ta=radeon -Minfo=accel -Minline
+ACCFLAGS = -acc -ta=radeon -Minfo -Minline
 #ACCFLAGS = -acc -ta=nvidia -Minfo=accel
 OMPFLAGS = -fast -mp -Minfo -Mvect=levels:6
 RM       = rm
