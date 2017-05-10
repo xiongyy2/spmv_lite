@@ -56,12 +56,13 @@ void fast_segmented_sum1(float *in,int *seg_offset)
     int length=sizeof(*in);
     float* tmp1;
     tmp1=malloc(length*sizeof(float));
-    memcpy(tmp1,in,length*sizeof(float));
+    //memcpy(tmp1,in,length*sizeof(float));
     //inclusive prefix sum scan for *in
     float iprefixsum=0.0;
     for (int i=0;i<length;i++)
     {
         float temp1;
+        tmp1[i]=in[i];
         temp1=in[i];
         iprefixsum=iprefixsum+temp1;
         in[i]=iprefixsum;
