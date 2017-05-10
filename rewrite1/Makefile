@@ -10,7 +10,7 @@ BIN =  main_omp main_acc main_cpu_gcc main_cpu_pgcc main_csr5_seq main_csr5_omp
 
 all: $(BIN)
 
-main_acc: csr_main1.c csr_cpu.c csr_ompacc.c sparse_formats.c ziggurat.c
+main_acc: csr_main1.c csr_cpu.c csr_ompacc.c allthefunctions.c
 	$(CC) $(CCFLAGS) $(ACCFLAGS) -o $@ $^
 
 main_omp: csr_main1.c csr_cpu.c csr_ompacc.c allthefunctions.c
