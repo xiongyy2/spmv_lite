@@ -205,7 +205,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 y_offset[i]=empty_offset[y_offset[i]];
             }
             printf("empty_offset generated\n");
-            free(empty_offset);
+            //free(empty_offset);
         }
         
 
