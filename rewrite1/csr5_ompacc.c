@@ -1,4 +1,5 @@
 #include "allthefunctions.h"
+#include <omp.h>
 
 unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd)
 {
@@ -209,8 +210,6 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             printf("empty_offset generated\n");
         }
         
-
-
         float* tmp;
         tmp=malloc(omega*sizeof(float));
         memset(tmp,0,omega*sizeof(float));
