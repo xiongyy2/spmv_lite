@@ -76,7 +76,8 @@ void fast_segmented_sum1(float *in,int *seg_offset)
 void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,const unsigned long num_nonzeros,const unsigned long* row_ptr,const unsigned long* col_idx,const float* val,const float* x,const float* y,float* out)
 {
     int omega=4;
-    int sigma=4;
+    //int sigma=4;
+    int sigma=ceil((double)num_nonzeros/(double)num_rows);
 
     unsigned long p;//number of tiles
     p=(unsigned long)ceil((double)num_nonzeros/(double)omega/(double)sigma);
