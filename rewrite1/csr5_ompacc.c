@@ -145,202 +145,204 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     printf("bit_flag generated\n");
 //num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x_host,y_host,para_out
 #pragma acc data copy(num_rows,num_cols,num_nonzeros,row_ptr[0:num_rows],col_idx[0:num_nonzeros-1],val[0:num_nonzeros-1],x[0:num_cols-1],y[0:num_rows-1],out[0:num_rows-1],bit_flag[0:len_bitflag-1])
+#pragma acc data present(num_rows,num_cols,num_nonzeros,row_ptr[0:num_rows],col_idx[0:num_nonzeros-1],val[0:num_nonzeros-1],x[0:num_cols-1],y[0:num_rows-1],out[0:num_rows-1],bit_flag[0:len_bitflag-1])
 {
 #pragma acc parallel
-{
-#pragma omp parallel private(tid)
-{
-#pragma omp for schedule(dynamic)
-#pragma acc loop
-    for (tid=0;tid<p_cmplt;tid++)//loop over complete tiles
     {
-        //generating y_offset and seg_offset----------
-        int* y_offset;
-        int* seg_offset;
-        y_offset=malloc(omega*sizeof(int));
-        seg_offset=malloc(omega*sizeof(int));
-        int* tmp_bit;
-        tmp_bit=malloc(omega*sizeof(int));
-        memset(tmp_bit,0,omega*sizeof(int));
-        int i2=0;
-        int j2=0;
-#pragma acc loop
-        for (i2=0;i2<omega;i2++)
+    #pragma omp parallel private(tid)
+    {
+    #pragma omp for schedule(dynamic)
+    #pragma acc loop
+        for (tid=0;tid<p_cmplt;tid++)//loop over complete tiles
         {
-            y_offset[i2]=0;
-#pragma acc loop
-            for (j2=0;j2<sigma;j2++)
+            //generating y_offset and seg_offset----------
+            int* y_offset;
+            int* seg_offset;
+            y_offset=malloc(omega*sizeof(int));
+            seg_offset=malloc(omega*sizeof(int));
+            int* tmp_bit;
+            tmp_bit=malloc(omega*sizeof(int));
+            memset(tmp_bit,0,omega*sizeof(int));
+            int i2=0;
+            int j2=0;
+    #pragma acc loop
+            for (i2=0;i2<omega;i2++)
             {
-                unsigned long index=tid*omega*sigma+i2*sigma+j2;
-                y_offset[i2]=y_offset[i2]+bit_flag[index];
-                if( tmp_bit[i2] || bit_flag[index] )
+                y_offset[i2]=0;
+    #pragma acc loop
+                for (j2=0;j2<sigma;j2++)
                 {
-                    tmp_bit[i2]=1;
-                }
-            }
-            seg_offset[i2]=1-tmp_bit[i2];
-        }
-        //exclusive prefix sum scan y_offset
-        int eprefixsum=0;
-        int i3=0;
-        for (i3=0;i3<omega;i3++)
-        {
-            int temp1;
-            temp1=y_offset[i3];
-            y_offset[i3]=eprefixsum;
-            eprefixsum=eprefixsum+temp1;
-        }
-        //segmented_sum for seg_offset
-        segmented_sum1(seg_offset,tmp_bit);
-        free(tmp_bit);
-        //printf("y_offset seg_offset generated\n");
-        //generating empty_offset-------------------------
-        if(tile_ptr_empty[tid])//if this tile has empty row
-        {
-            int* empty_offset;
-            int size_empty_offset=0;
-            int i4=0;
-            for (i4=0;i4<(omega*sigma);i4++)
-            {
-                if(bit_flag[tid*omega*sigma+i4]) size_empty_offset+=1;
-            }
-            empty_offset=malloc(size_empty_offset*sizeof(int));
-            int eid=0;
-            int i5=0;
-            int j5=0;
-            for (i5=0;i5<omega;i5++)
-            {
-                for (j5=0;j5<sigma;j5++)
-                {
-                    unsigned long index=tid*omega*sigma+i5*sigma+j5;
-                    if (bit_flag[index])
+                    unsigned long index=tid*omega*sigma+i2*sigma+j2;
+                    y_offset[i2]=y_offset[i2]+bit_flag[index];
+                    if( tmp_bit[i2] || bit_flag[index] )
                     {
-                        unsigned long idx=binary_search1(num_rows+1,row_ptr,index);
-                        //if (idx<0) idx=0;
-                        idx=idx-tile_ptr[tid];
-                        empty_offset[eid]=idx;
-                        //printf("tid=%lu, empty_offset[%d]=%lu\n",tid,eid,idx);
-                        eid=eid+1;
+                        tmp_bit[i2]=1;
                     }
                 }
+                seg_offset[i2]=1-tmp_bit[i2];
             }
-            int i6=0;
-            for (i6=0;i6<omega;i6++)
+            //exclusive prefix sum scan y_offset
+            int eprefixsum=0;
+            int i3=0;
+            for (i3=0;i3<omega;i3++)
             {
-                y_offset[i6]=empty_offset[y_offset[i6]];
+                int temp1;
+                temp1=y_offset[i3];
+                y_offset[i3]=eprefixsum;
+                eprefixsum=eprefixsum+temp1;
             }
-            printf("empty_offset generated\n");
-        }
-        
-        float* tmp;
-        tmp=malloc(omega*sizeof(float));
-        memset(tmp,0,omega*sizeof(float));
-        float* last_tmp;
-        last_tmp=malloc(omega*sizeof(float));
-        memset(last_tmp,0,omega*sizeof(float));
-        int i7=0;
-        int j7=0;
-        int jj7=0;
-#pragma acc loop
-        for (i7=0;i7<omega;i7++)
-        {
-            float sum=0;//first ignore y array
-#pragma acc loop
-            for (j7=0;j7<sigma;j7++)
+            //segmented_sum for seg_offset
+            segmented_sum1(seg_offset,tmp_bit);
+            free(tmp_bit);
+            //printf("y_offset seg_offset generated\n");
+            //generating empty_offset-------------------------
+            if(tile_ptr_empty[tid])//if this tile has empty row
             {
-                unsigned long ptr=tid*omega*sigma+i7*sigma+j7;
-                //unsigned long ptr1=tid*omega*sigma+j*omega+i;
-                sum=sum+val[ptr]*x[col_idx[ptr]];
-                //check bit_flag[ptr]
-                int seal_head=0;
-                int seal_tail=0;
-#pragma acc loop
-                for (jj7=0;jj7<j7+1;jj7++)
+                int* empty_offset;
+                int size_empty_offset=0;
+                int i4=0;
+                for (i4=0;i4<(omega*sigma);i4++)
                 {
-                    if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
+                    if(bit_flag[tid*omega*sigma+i4]) size_empty_offset+=1;
+                }
+                empty_offset=malloc(size_empty_offset*sizeof(int));
+                int eid=0;
+                int i5=0;
+                int j5=0;
+                for (i5=0;i5<omega;i5++)
+                {
+                    for (j5=0;j5<sigma;j5++)
                     {
-                        seal_head=1;
+                        unsigned long index=tid*omega*sigma+i5*sigma+j5;
+                        if (bit_flag[index])
+                        {
+                            unsigned long idx=binary_search1(num_rows+1,row_ptr,index);
+                            //if (idx<0) idx=0;
+                            idx=idx-tile_ptr[tid];
+                            empty_offset[eid]=idx;
+                            //printf("tid=%lu, empty_offset[%d]=%lu\n",tid,eid,idx);
+                            eid=eid+1;
+                        }
                     }
                 }
-#pragma acc loop
-                for (jj7=j7+1;jj7<sigma;jj7++)
+                int i6=0;
+                for (i6=0;i6<omega;i6++)
                 {
-                    if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
-                    {
-                        seal_tail=1;
-                    }
+                    y_offset[i6]=empty_offset[y_offset[i6]];
                 }
-                //if(ptr<num_nonzeros-sigma)
-                /*if(i<omega-1)
+                printf("empty_offset generated\n");
+            }
+            
+            float* tmp;
+            tmp=malloc(omega*sizeof(float));
+            memset(tmp,0,omega*sizeof(float));
+            float* last_tmp;
+            last_tmp=malloc(omega*sizeof(float));
+            memset(last_tmp,0,omega*sizeof(float));
+            int i7=0;
+            int j7=0;
+            int jj7=0;
+    #pragma acc loop
+            for (i7=0;i7<omega;i7++)
+            {
+                float sum=0;//first ignore y array
+    #pragma acc loop
+                for (j7=0;j7<sigma;j7++)
                 {
-                    for (int jj=j+1;jj<sigma;jj++)
+                    unsigned long ptr=tid*omega*sigma+i7*sigma+j7;
+                    //unsigned long ptr1=tid*omega*sigma+j*omega+i;
+                    sum=sum+val[ptr]*x[col_idx[ptr]];
+                    //check bit_flag[ptr]
+                    int seal_head=0;
+                    int seal_tail=0;
+    #pragma acc loop
+                    for (jj7=0;jj7<j7+1;jj7++)
                     {
-                        if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                        if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
+                        {
+                            seal_head=1;
+                        }
+                    }
+    #pragma acc loop
+                    for (jj7=j7+1;jj7<sigma;jj7++)
+                    {
+                        if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
                         {
                             seal_tail=1;
                         }
                     }
-                }
-                else
-                {
-                    for (int jj=j+1;jj<sigma;jj++)
+                    //if(ptr<num_nonzeros-sigma)
+                    /*if(i<omega-1)
                     {
-                        if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                        for (int jj=j+1;jj<sigma;jj++)
                         {
-                            seal_tail=1;
+                            if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                            {
+                                seal_tail=1;
+                            }
                         }
                     }
-                }*/
-                int next_bit_flag=0;
-                if (j7<sigma-1) next_bit_flag=bit_flag[ptr+1];
-                else next_bit_flag=1;
-                //if (i<omega-1) next_bit_flag=bit_flag[ptr+1];
-                //else if(j<sigma-1) next_bit_flag=bit_flag[ptr+1];
-                //else next_bit_flag=1;
-                if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (next_bit_flag) ) )//end of a red sub-segment
-                //if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
-                {
-                    tmp[i7-1]=sum;
-                    sum=0;
+                    else
+                    {
+                        for (int jj=j+1;jj<sigma;jj++)
+                        {
+                            if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                            {
+                                seal_tail=1;
+                            }
+                        }
+                    }*/
+                    int next_bit_flag=0;
+                    if (j7<sigma-1) next_bit_flag=bit_flag[ptr+1];
+                    else next_bit_flag=1;
+                    //if (i<omega-1) next_bit_flag=bit_flag[ptr+1];
+                    //else if(j<sigma-1) next_bit_flag=bit_flag[ptr+1];
+                    //else next_bit_flag=1;
+                    if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (next_bit_flag) ) )//end of a red sub-segment
+                    //if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
+                    {
+                        tmp[i7-1]=sum;
+                        sum=0;
+                    }
+                    else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
+                    {
+                        #pragma omp atomic
+                        #pragma acc atomic
+                        out[tile_ptr[tid]+y_offset[i7]]+=sum;//confirmed correct
+                        y_offset[i7]=y_offset[i7]+1;
+                        sum=0;
+                    }
                 }
-                else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
+                int seal_head2=0;
+    #pragma acc loop
+                for (j7=0;j7<sigma;j7++)
                 {
-                    #pragma omp atomic
-                    #pragma acc atomic
-                    out[tile_ptr[tid]+y_offset[i7]]+=sum;//confirmed correct
-                    y_offset[i7]=y_offset[i7]+1;
-                    sum=0;
+                    if (bit_flag[tid*omega*sigma+i7*sigma+j7])
+                    {
+                        seal_head2=1;
+                    }
                 }
+                if(seal_head2) last_tmp[i7]=sum; //end of a blue sub-segment
+                //last_tmp[i]=sum;//end of a blue sub-segment
             }
-            int seal_head2=0;
-#pragma acc loop
-            for (j7=0;j7<sigma;j7++)
+            fast_segmented_sum1(tmp,seg_offset);
+            
+            int i8=0;
+    #pragma acc loop
+            for (i8=0;i8<omega;i8++)
             {
-                if (bit_flag[tid*omega*sigma+i7*sigma+j7])
-                {
-                    seal_head2=1;
-                }
+                last_tmp[i8]=last_tmp[i8]+tmp[i8];
+                #pragma omp atomic
+                #pragma acc atomic
+                out[tile_ptr[tid]+y_offset[i8]]+=last_tmp[i8]/*+y[tile_ptr[tid]+y_offset[i]]*/;
             }
-            if(seal_head2) last_tmp[i7]=sum; //end of a blue sub-segment
-            //last_tmp[i]=sum;//end of a blue sub-segment
+            free(tmp);
+            free(last_tmp);
         }
-        fast_segmented_sum1(tmp,seg_offset);
-        
-        int i8=0;
-#pragma acc loop
-        for (i8=0;i8<omega;i8++)
-        {
-            last_tmp[i8]=last_tmp[i8]+tmp[i8];
-            #pragma omp atomic
-            #pragma acc atomic
-            out[tile_ptr[tid]+y_offset[i8]]+=last_tmp[i8]/*+y[tile_ptr[tid]+y_offset[i]]*/;
-        }
-        free(tmp);
-        free(last_tmp);
+    }
     }
 }
-}
-}
+
     if(p>p_cmplt)
     {
         //last incomplete tile
