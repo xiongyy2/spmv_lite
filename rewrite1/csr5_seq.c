@@ -208,6 +208,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         memset(tmp,0,omega*sizeof(float));
         float* last_tmp;
         last_tmp=malloc(omega*sizeof(float));
+        memset(last_tmp,0,omega*sizeof(float));
         for (int i=0;i<omega;i++)
         {
             float sum=0;//first ignore y array
@@ -282,7 +283,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 }
             }
             if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment*/
-            last_tmp[i]=sum;//end of a blue sub-segment
+            last_tmp[i]+=sum;//end of a blue sub-segment
         }
         fast_segmented_sum1(tmp,seg_offset);
         
