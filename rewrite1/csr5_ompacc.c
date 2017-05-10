@@ -140,12 +140,14 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         bit_flag[i1*omega*sigma]=1;//first entry of each tile
     }
     printf("bit_flag generated\n");
-
-
+//num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x_host,y_host,para_out
+#pragma acc data copy(num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x_host,y_host,para_out)
+{
+#pragma acc parallel
 #pragma omp parallel private(tid)
 {
 #pragma omp for schedule(dynamic)
-
+#pragma acc loop
     for (tid=0;tid<p_cmplt;tid++)//loop over complete tiles
     {
         //generating y_offset and seg_offset----------
@@ -158,9 +160,11 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         memset(tmp_bit,0,omega*sizeof(int));
         int i2=0;
         int j2=0;
+#pragma acc loop
         for (i2=0;i2<omega;i2++)
         {
             y_offset[i2]=0;
+#pragma acc loop
             for (j2=0;j2<sigma;j2++)
             {
                 unsigned long index=tid*omega*sigma+i2*sigma+j2;
@@ -233,9 +237,11 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         int i7=0;
         int j7=0;
         int jj7=0;
+#pragma acc loop
         for (i7=0;i7<omega;i7++)
         {
             float sum=0;//first ignore y array
+#pragma acc loop
             for (j7=0;j7<sigma;j7++)
             {
                 unsigned long ptr=tid*omega*sigma+i7*sigma+j7;
@@ -244,6 +250,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //check bit_flag[ptr]
                 int seal_head=0;
                 int seal_tail=0;
+#pragma acc loop
                 for (jj7=0;jj7<j7+1;jj7++)
                 {
                     if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
@@ -251,6 +258,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                         seal_head=1;
                     }
                 }
+#pragma acc loop
                 for (jj7=j7+1;jj7<sigma;jj7++)
                 {
                     if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
@@ -294,12 +302,14 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
                 {
                     #pragma omp atomic
+                    #pragma acc atomic
                     out[tile_ptr[tid]+y_offset[i7]]+=sum;//confirmed correct
                     y_offset[i7]=y_offset[i7]+1;
                     sum=0;
                 }
             }
             int seal_head2=0;
+#pragma acc loop
             for (j7=0;j7<sigma;j7++)
             {
                 if (bit_flag[tid*omega*sigma+i7*sigma+j7])
@@ -313,15 +323,18 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         fast_segmented_sum1(tmp,seg_offset);
         
         int i8=0;
+#pragma acc loop
         for (i8=0;i8<omega;i8++)
         {
             last_tmp[i8]=last_tmp[i8]+tmp[i8];
             #pragma omp atomic
+            #pragma acc atomic
             out[tile_ptr[tid]+y_offset[i8]]+=last_tmp[i8]/*+y[tile_ptr[tid]+y_offset[i]]*/;
         }
         free(tmp);
         free(last_tmp);
     }
+}
 }
     if(p>p_cmplt)
     {
