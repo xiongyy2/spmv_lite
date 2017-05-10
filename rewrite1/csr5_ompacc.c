@@ -142,7 +142,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     printf("bit_flag generated\n");
 
 
-#pragma omp parallel private(tid)
+#pragma omp parallel private(tid) schedule(dynamic)
 {
 #pragma omp for
 
