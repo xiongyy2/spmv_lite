@@ -9,7 +9,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 #pragma omp parallel 
 	{
 	#pragma omp for private(row, row_start, row_end, jj, sum)
-#pragma acc kernels loop 
+#pragma acc kernels loop independent
 		for(row=0; row < num_rows; row++)
 		{
 			sum = y[row];
