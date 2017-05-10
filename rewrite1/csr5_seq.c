@@ -264,7 +264,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (next_bit_flag) ) )//end of a red sub-segment
                 //if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
                 {
-                    tmp[i-1]=sum;
+                    tmp[i-1]+=sum;
                     sum=0;
                 }
                 else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
