@@ -136,6 +136,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 
 
 #pragma omp parallel
+{
 #pragma omp for
     for (unsigned long tid=0;tid<p_cmplt;tid++)//loop over complete tiles
     {
@@ -302,7 +303,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         free(tmp);
         free(last_tmp);
     }
-
+}
     if(p>p_cmplt)
     {
         //last incomplete tile
