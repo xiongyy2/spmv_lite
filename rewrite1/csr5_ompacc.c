@@ -230,7 +230,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 {
                     y_offset[i6]=empty_offset[y_offset[i6]];
                 }
-                printf("empty_offset generated\n");
+                //printf("empty_offset generated\n");
             }
             
             float* tmp;
