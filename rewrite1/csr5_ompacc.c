@@ -1,4 +1,6 @@
 #include "allthefunctions.h"
+#include<string.h>
+
 
 unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd)
 {
