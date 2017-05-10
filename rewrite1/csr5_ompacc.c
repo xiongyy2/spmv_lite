@@ -100,16 +100,18 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     memset(tile_ptr_empty,0,(p+1)*sizeof(char)); //0 if tile contains no empty row
 
 //generating tile_ptr and tile_ptr_empty--------------
-    for (unsigned long tid=0;tid<p+1;tid++)
+    unsigned long tid=0;
+    unsigned long bnd=0;
+    unsigned long rid=0;
+    for (tid=0;tid<p+1;tid++)
     {
-        unsigned long bnd;
         bnd=tid*omega*sigma;
         tile_ptr[tid]=binary_search1(num_rows+1,row_ptr,bnd);
         //if (tile_ptr[tid]<0) tile_ptr[tid]=0;
     }
-    for (unsigned long tid=0;tid<p;tid++)
+    for (tid=0;tid<p;tid++)
     {
-        for (unsigned long rid=tile_ptr[tid];rid<tile_ptr[tid+1]+1;rid++)
+        for (rid=tile_ptr[tid];rid<tile_ptr[tid+1]+1;rid++)
         {
             if (row_ptr[rid]==row_ptr[rid+1])
             {
@@ -124,13 +126,14 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     char* bit_flag;
     bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(char));
     memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(char));
-    for (unsigned long i=0;i<num_rows;i++)
+    unsigned long i1;
+    for (i1=0;i1<num_rows;i1++)
     {
-        bit_flag[row_ptr[i]]=1;//first nonzero entry of a row
+        bit_flag[row_ptr[i1]]=1;//first nonzero entry of a row
     }
-    for (unsigned long i=0;i<p_cmplt;i++)
+    for (i1=0;i1<p_cmplt;i1++)
     {
-        bit_flag[i*omega*sigma]=1;//first entry of each tile
+        bit_flag[i1*omega*sigma]=1;//first entry of each tile
     }
     printf("bit_flag generated\n");
 
@@ -138,7 +141,8 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
 #pragma omp parallel
 {
 #pragma omp for
-    for (unsigned long tid=0;tid<p_cmplt;tid++)//loop over complete tiles
+
+    for (tid=0;tid<p_cmplt;tid++)//loop over complete tiles
     {
         //generating y_offset and seg_offset----------
         int* y_offset;
@@ -148,27 +152,30 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         int* tmp_bit;
         tmp_bit=malloc(omega*sizeof(int));
         memset(tmp_bit,0,omega*sizeof(int));
-        for (int i=0;i<omega;i++)
+        int i2=0;
+        int j2=0;
+        for (i2=0;i2<omega;i2++)
         {
-            y_offset[i]=0;
-            for (int j=0;j<sigma;j++)
+            y_offset[i2]=0;
+            for (j2=0;j2<sigma;j2++)
             {
-                unsigned long index=tid*omega*sigma+i*sigma+j;
-                y_offset[i]=y_offset[i]+bit_flag[index];
-                if( tmp_bit[i] || bit_flag[index] )
+                unsigned long index=tid*omega*sigma+i2*sigma+j2;
+                y_offset[i2]=y_offset[i2]+bit_flag[index];
+                if( tmp_bit[i2] || bit_flag[index] )
                 {
-                    tmp_bit[i]=1;
+                    tmp_bit[i2]=1;
                 }
             }
-            seg_offset[i]=1-tmp_bit[i];
+            seg_offset[i2]=1-tmp_bit[i2];
         }
         //exclusive prefix sum scan y_offset
         int eprefixsum=0;
-        for (int i=0;i<omega;i++)
+        int i3=0;
+        for (i3=0;i3<omega;i3++)
         {
             int temp1;
-            temp1=y_offset[i];
-            y_offset[i]=eprefixsum;
+            temp1=y_offset[i3];
+            y_offset[i3]=eprefixsum;
             eprefixsum=eprefixsum+temp1;
         }
         //segmented_sum for seg_offset
@@ -180,17 +187,20 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         {
             int* empty_offset;
             int size_empty_offset=0;
-            for (int i=0;i<(omega*sigma);i++)
+            int i4=0;
+            for (i4=0;i4<(omega*sigma);i4++)
             {
-                if(bit_flag[tid*omega*sigma+i]) size_empty_offset+=1;
+                if(bit_flag[tid*omega*sigma+i4]) size_empty_offset+=1;
             }
             empty_offset=malloc(size_empty_offset*sizeof(int));
             int eid=0;
-            for (int i=0;i<omega;i++)
+            int i5=0;
+            int j5=0;
+            for (i5=0;i5<omega;i5++)
             {
-                for (int j=0;j<sigma;j++)
+                for (j5=0;j5<sigma;j5++)
                 {
-                    unsigned long index=tid*omega*sigma+i*sigma+j;
+                    unsigned long index=tid*omega*sigma+i5*sigma+j5;
                     if (bit_flag[index])
                     {
                         unsigned long idx=binary_search1(num_rows+1,row_ptr,index);
@@ -202,9 +212,10 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                     }
                 }
             }
-            for (int i=0;i<omega;i++)
+            int i6=0;
+            for (i6=0;i6<omega;i6++)
             {
-                y_offset[i]=empty_offset[y_offset[i]];
+                y_offset[i6]=empty_offset[y_offset[i6]];
             }
             printf("empty_offset generated\n");
         }
@@ -215,27 +226,30 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         float* last_tmp;
         last_tmp=malloc(omega*sizeof(float));
         memset(last_tmp,0,omega*sizeof(float));
-        for (int i=0;i<omega;i++)
+        int i7=0;
+        int j7=0;
+        int jj7=0;
+        for (i7=0;i7<omega;i7++)
         {
             float sum=0;//first ignore y array
-            for (int j=0;j<sigma;j++)
+            for (j7=0;j7<sigma;j7++)
             {
-                unsigned long ptr=tid*omega*sigma+i*sigma+j;
+                unsigned long ptr=tid*omega*sigma+i7*sigma+j7;
                 //unsigned long ptr1=tid*omega*sigma+j*omega+i;
                 sum=sum+val[ptr]*x[col_idx[ptr]];
                 //check bit_flag[ptr]
                 int seal_head=0;
                 int seal_tail=0;
-                for (int jj=0;jj<j+1;jj++)
+                for (jj7=0;jj7<j7+1;jj7++)
                 {
-                    if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                    if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
                     {
                         seal_head=1;
                     }
                 }
-                for (int jj=j+1;jj<sigma;jj++)
+                for (jj7=j7+1;jj7<sigma;jj7++)
                 {
-                    if (bit_flag[tid*omega*sigma+i*sigma+jj])
+                    if (bit_flag[tid*omega*sigma+i7*sigma+jj7])
                     {
                         seal_tail=1;
                     }
@@ -262,7 +276,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                     }
                 }*/
                 int next_bit_flag=0;
-                if (j<sigma-1) next_bit_flag=bit_flag[ptr+1];
+                if (j7<sigma-1) next_bit_flag=bit_flag[ptr+1];
                 else next_bit_flag=1;
                 //if (i<omega-1) next_bit_flag=bit_flag[ptr+1];
                 //else if(j<sigma-1) next_bit_flag=bit_flag[ptr+1];
@@ -270,33 +284,34 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (next_bit_flag) ) )//end of a red sub-segment
                 //if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
                 {
-                    tmp[i-1]=sum;
+                    tmp[i7-1]=sum;
                     sum=0;
                 }
                 else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
                 {
-                    out[tile_ptr[tid]+y_offset[i]]+=sum;//confirmed correct
-                    y_offset[i]=y_offset[i]+1;
+                    out[tile_ptr[tid]+y_offset[i7]]+=sum;//confirmed correct
+                    y_offset[i7]=y_offset[i7]+1;
                     sum=0;
                 }
             }
             int seal_head2=0;
-            for (int j=0;j<sigma;j++)
+            for (j7=0;j7<sigma;j7++)
             {
-                if (bit_flag[tid*omega*sigma+i*sigma+j])
+                if (bit_flag[tid*omega*sigma+i7*sigma+j7])
                 {
                     seal_head2=1;
                 }
             }
-            if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment
+            if(seal_head2) last_tmp[i7]=sum; //end of a blue sub-segment
             //last_tmp[i]=sum;//end of a blue sub-segment
         }
         fast_segmented_sum1(tmp,seg_offset);
         
-        for (int i=0;i<omega;i++)
+        int i8=0;
+        for (i8=0;i8<omega;i8++)
         {
-            last_tmp[i]=last_tmp[i]+tmp[i];
-            out[tile_ptr[tid]+y_offset[i]]+=last_tmp[i]/*+y[tile_ptr[tid]+y_offset[i]]*/;
+            last_tmp[i8]=last_tmp[i8]+tmp[i8];
+            out[tile_ptr[tid]+y_offset[i8]]+=last_tmp[i8]/*+y[tile_ptr[tid]+y_offset[i]]*/;
         }
         free(tmp);
         free(last_tmp);
