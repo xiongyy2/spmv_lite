@@ -112,6 +112,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //break;
             }
         }
+        if(tile_ptr_empty[tid]) printf("tile-%lu has empty row\n",tid);
     }
     printf("tile_ptr generated\n");
 //generating bit_flag-----------------------------
