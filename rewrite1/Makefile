@@ -3,7 +3,7 @@ CC       = pgcc
 CCFLAGS  = 
 ACCFLAGS = -acc -ta=radeon -Minfo=accel
 #ACCFLAGS = -acc -ta=nvidia -Minfo=accel
-OMPFLAGS = -fast -mp -Minfo
+OMPFLAGS = -fast -mp -Minfo -Mvect=levels:4
 RM       = rm
 
 BIN =  main_omp main_acc main_cpu_gcc main_cpu_pgcc main_csr5_seq main_csr5_omp
