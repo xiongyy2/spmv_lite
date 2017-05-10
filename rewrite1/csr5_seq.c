@@ -95,9 +95,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     tile_ptr=long_new_array(p+1,"Heap Overflow! Cannot allocate space for tile_ptr\n");
     printf("tile_ptr allocated\n");
 
-    int* tile_ptr_empty;
-    tile_ptr_empty=malloc((p+1)*sizeof(int));
-    memset(tile_ptr_empty,0,(p+1)*sizeof(int)); //0 if tile contains no empty row
+    char* tile_ptr_empty;
+    tile_ptr_empty=malloc((p+1)*sizeof(char));
+    memset(tile_ptr_empty,0,(p+1)*sizeof(char)); //0 if tile contains no empty row
 
 //generating tile_ptr and tile_ptr_empty--------------
     for (unsigned long tid=0;tid<p+1;tid++)
@@ -121,9 +121,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     }
     printf("tile_ptr generated\n");
 //generating bit_flag-----------------------------
-    int* bit_flag;
-    bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(int));
-    memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(int));
+    char* bit_flag;
+    bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(char));
+    memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(char));
     for (unsigned long i=0;i<num_rows;i++)
     {
         bit_flag[row_ptr[i]]=1;//first nonzero entry of a row
