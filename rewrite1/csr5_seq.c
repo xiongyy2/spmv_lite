@@ -205,6 +205,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 y_offset[i]=empty_offset[y_offset[i]];
             }
             printf("empty_offset generated\n");
+            free(empty_offset);
         }
         
 
@@ -300,6 +301,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         }
         free(tmp);
         free(last_tmp);
+        free(y_offset);
+        free(seg_offset);
+        free(tmp_bit);
     }
     
     if(p>p_cmplt)
@@ -320,4 +324,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             out[row] = sum;
         }
     }
+    free(tile_ptr);
+    free(tile_ptr_empty);
+    free(bit_flag);
 }
