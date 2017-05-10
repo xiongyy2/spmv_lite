@@ -142,9 +142,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     printf("bit_flag generated\n");
 
 
-#pragma omp parallel private(tid), schedule(dynamic)
+#pragma omp parallel private(tid)
 {
-#pragma omp for
+#pragma omp for schedule(dynamic)
 
     for (tid=0;tid<p_cmplt;tid++)//loop over complete tiles
     {
