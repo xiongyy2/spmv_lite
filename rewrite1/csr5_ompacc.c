@@ -1,5 +1,4 @@
 #include "allthefunctions.h"
-#include<string.h>
 
 
 unsigned long binary_search1(size_t size,unsigned long*row_ptr,unsigned long bnd)
@@ -162,13 +161,14 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             seg_offset=malloc(omega*sizeof(int));
             int* tmp_bit;
             tmp_bit=malloc(omega*sizeof(int));
-            memset(tmp_bit,0,omega*sizeof(int));
+            //memset(tmp_bit,0,omega*sizeof(int));
             int i2=0;
             int j2=0;
     #pragma acc loop
             for (i2=0;i2<omega;i2++)
             {
                 y_offset[i2]=0;
+                tmp_bit[i2]=0;
     #pragma acc loop
                 for (j2=0;j2<sigma;j2++)
                 {
@@ -235,13 +235,19 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
             
             float* tmp;
             tmp=malloc(omega*sizeof(float));
-            memset(tmp,0,omega*sizeof(float));
+            //memset(tmp,0,omega*sizeof(float));
             float* last_tmp;
             last_tmp=malloc(omega*sizeof(float));
-            memset(last_tmp,0,omega*sizeof(float));
+            //memset(last_tmp,0,omega*sizeof(float));
+
             int i7=0;
             int j7=0;
             int jj7=0;
+            for (i7=0;i7<omega;i7++)
+            {
+                tmp[i7]=0;
+                last_tmp[i7]=0;
+            }
     #pragma acc loop
             for (i7=0;i7<omega;i7++)
             {
