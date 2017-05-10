@@ -290,7 +290,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         for (int i=0;i<omega;i++)
         {
             last_tmp[i]=last_tmp[i]+tmp[i];
-            out[tile_ptr[tid]+y_offset[i]]=last_tmp[i]/*+y[tile_ptr[tid]+y_offset[i]]*/;
+            out[tile_ptr[tid]+y_offset[i]]+=last_tmp[i]/*+y[tile_ptr[tid]+y_offset[i]]*/;
         }
         free(tmp);
         free(last_tmp);
