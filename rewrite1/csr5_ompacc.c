@@ -80,6 +80,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     int sigma;
     int nz_row=ceil((double)num_nonzeros/(double)num_rows);
     if (nz_row<5) sigma=4;
+    else if (nz_row<100) sigma=nz_row;
     else sigma=nz_row*2;
     printf("omega=%d\nsigma=%d\n",omega,sigma);
 
