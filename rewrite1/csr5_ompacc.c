@@ -76,7 +76,12 @@ void fast_segmented_sum1(float *in,int *seg_offset)
 void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,const unsigned long num_nonzeros,const unsigned long* row_ptr,const unsigned long* col_idx,const float* val,const float* x,const float* y,float* out)
 {
     int omega=4;
-    int sigma=4;
+    //int sigma=4;
+    int sigma;
+    int nz_row=ceil((double)num_nonzeros/(double)num_rows);
+    if (nz_row<5) sigma=4;
+    else sigma=nz_row;
+    printf("omega=%d\nsigma=%d\n",omega,sigma);
 
     unsigned long p;//number of tiles
     p=(unsigned long)ceil((double)num_nonzeros/(double)omega/(double)sigma);
@@ -90,9 +95,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     tile_ptr=long_new_array(p+1,"Heap Overflow! Cannot allocate space for tile_ptr\n");
     printf("tile_ptr allocated\n");
 
-    int* tile_ptr_empty;
-    tile_ptr_empty=malloc((p+1)*sizeof(int));
-    memset(tile_ptr_empty,0,(p+1)*sizeof(int)); //0 if tile contains no empty row
+    char* tile_ptr_empty;
+    tile_ptr_empty=malloc((p+1)*sizeof(char));
+    memset(tile_ptr_empty,0,(p+1)*sizeof(char)); //0 if tile contains no empty row
 
 //generating tile_ptr and tile_ptr_empty--------------
     for (unsigned long tid=0;tid<p+1;tid++)
@@ -112,12 +117,13 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //break;
             }
         }
+        if(tile_ptr_empty[tid]) printf("tile-%lu has empty row\n",tid);
     }
     printf("tile_ptr generated\n");
 //generating bit_flag-----------------------------
-    int* bit_flag;
-    bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(int));
-    memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(int));
+    char* bit_flag;
+    bit_flag=malloc((p_cmplt*omega*sigma)*sizeof(char));
+    memset(bit_flag,0,(p_cmplt*omega*sigma)*sizeof(char));
     for (unsigned long i=0;i<num_rows;i++)
     {
         bit_flag[row_ptr[i]]=1;//first nonzero entry of a row
@@ -129,7 +135,9 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     printf("bit_flag generated\n");
 
 
-#pragma omp parallel for
+#pragma omp parallel
+#pragma omp for
+{
     for (unsigned long tid=0;tid<p_cmplt;tid++)//loop over complete tiles
     {
         //generating y_offset and seg_offset----------
@@ -208,6 +216,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
         memset(tmp,0,omega*sizeof(float));
         float* last_tmp;
         last_tmp=malloc(omega*sizeof(float));
+        memset(last_tmp,0,omega*sizeof(float));
         for (int i=0;i<omega;i++)
         {
             float sum=0;//first ignore y array
@@ -260,20 +269,20 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                 //if (i<omega-1) next_bit_flag=bit_flag[ptr+1];
                 //else if(j<sigma-1) next_bit_flag=bit_flag[ptr+1];
                 //else next_bit_flag=1;
-                //if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (j==(sigma-1)) ) )//end of a red sub-segment
-                if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
+                if (((!seal_head) && seal_tail && next_bit_flag) || ( (!seal_head) && (!seal_tail) && (next_bit_flag) ) )//end of a red sub-segment
+                //if (((!seal_head) && seal_tail && next_bit_flag) )//end of a red sub-segment
                 {
                     tmp[i-1]=sum;
                     sum=0;
                 }
                 else if ( seal_head && seal_tail && next_bit_flag )//end of a green segment
                 {
-                    out[tile_ptr[tid]+y_offset[i]]+=sum/*+y[tile_ptr[tid]+y_offset[i]]*/;
+                    out[tile_ptr[tid]+y_offset[i]]+=sum;//confirmed correct
                     y_offset[i]=y_offset[i]+1;
                     sum=0;
                 }
             }
-            /*int seal_head2=0;
+            int seal_head2=0;
             for (int j=0;j<sigma;j++)
             {
                 if (bit_flag[tid*omega*sigma+i*sigma+j])
@@ -281,20 +290,20 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
                     seal_head2=1;
                 }
             }
-            if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment*/
-            last_tmp[i]=sum;
+            if(seal_head2) last_tmp[i]=sum; //end of a blue sub-segment
+            //last_tmp[i]=sum;//end of a blue sub-segment
         }
         fast_segmented_sum1(tmp,seg_offset);
         
         for (int i=0;i<omega;i++)
         {
             last_tmp[i]=last_tmp[i]+tmp[i];
-            out[tile_ptr[tid]+y_offset[i]]=last_tmp[i]/*+y[tile_ptr[tid]+y_offset[i]]*/;
+            out[tile_ptr[tid]+y_offset[i]]+=last_tmp[i]/*+y[tile_ptr[tid]+y_offset[i]]*/;
         }
         free(tmp);
         free(last_tmp);
     }
-    
+}
     if(p>p_cmplt)
     {
         //last incomplete tile
