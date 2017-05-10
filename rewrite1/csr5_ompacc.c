@@ -141,7 +141,7 @@ void spmv_csr_acc(const unsigned long num_rows,const unsigned long num_cols,cons
     }
     printf("bit_flag generated\n");
 //num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x_host,y_host,para_out
-#pragma acc data copy(row_ptr,col_idx,val,x_host,y_host,para_out)
+#pragma acc data copy(num_rows,num_cols,num_nonzeros,row_ptr,col_idx,val,x,y,out)
 {
 #pragma acc parallel
 #pragma omp parallel private(tid)
